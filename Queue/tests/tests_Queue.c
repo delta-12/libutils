@@ -5,7 +5,6 @@ typedef uint8_t tests_Queue_Item_t;
 
 #define TESTS_QUEUE_LENGTH 10UL
 #define TESTS_QUEUE_ITEM_SIZE sizeof(tests_Queue_Item_t)
-#define TESTS_QUEUE_PUSHPOPPEEKISEMPTY_REPEAT 2U
 
 static Queue_t *test_Queue;
 static uint8_t test_QueueStaticBuffer[TESTS_QUEUE_LENGTH * TESTS_QUEUE_ITEM_SIZE];
@@ -50,51 +49,62 @@ void tests_Queue_PushPopPeekIsEmpty(void)
 
     Queue_Reset(test_Queue);
 
-    for (uint8_t i = 0U; i < TESTS_QUEUE_PUSHPOPPEEKISEMPTY_REPEAT; i++)
+    item = 0U;
+    TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
+    TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
+    TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
+    TEST_ASSERT_EQUAL(0U, item);
+    item = 1U;
+    TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
+    TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
+    TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
+    TEST_ASSERT_EQUAL(0U, item);
+    item = 2U;
+    TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
+    TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
+    TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
+    TEST_ASSERT_EQUAL(0U, item);
+
+    TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
+    TEST_ASSERT_EQUAL(0U, item);
+    TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
+    TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
+    TEST_ASSERT_EQUAL(1U, item);
+    TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
+    TEST_ASSERT_EQUAL(1U, item);
+    TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
+    TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
+    TEST_ASSERT_EQUAL(2U, item);
+
+    item = 0U;
+    TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
+    TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
+    TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
+    TEST_ASSERT_EQUAL(2U, item);
+
+    TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
+    TEST_ASSERT_EQUAL(2U, item);
+    TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
+    TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
+    TEST_ASSERT_EQUAL(0U, item);
+    TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
+    TEST_ASSERT_EQUAL(0U, item);
+    TEST_ASSERT_TRUE(Queue_IsEmpty(test_Queue));
+    TEST_ASSERT_FALSE(Queue_Peek(test_Queue, &item));
+
+    for (tests_Queue_Item_t i = 0U; i < TESTS_QUEUE_LENGTH; i++)
     {
-        item = 0U;
-        TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
+        TEST_ASSERT_TRUE(Queue_Push(test_Queue, &i));
         TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
         TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
         TEST_ASSERT_EQUAL(0U, item);
-        item = 1U;
-        TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
-        TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
-        TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
-        TEST_ASSERT_EQUAL(0U, item);
-        item = 2U;
-        TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
-        TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
-        TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
-        TEST_ASSERT_EQUAL(0U, item);
-
-        TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
-        TEST_ASSERT_EQUAL(0U, item);
-        TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
-        TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
-        TEST_ASSERT_EQUAL(1U, item);
-        TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
-        TEST_ASSERT_EQUAL(1U, item);
-        TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
-        TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
-        TEST_ASSERT_EQUAL(2U, item);
-
-        item = 0U;
-        TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
-        TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
-        TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
-        TEST_ASSERT_EQUAL(2U, item);
-
-        TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
-        TEST_ASSERT_EQUAL(2U, item);
-        TEST_ASSERT_FALSE(Queue_IsEmpty(test_Queue));
-        TEST_ASSERT_TRUE(Queue_Peek(test_Queue, &item));
-        TEST_ASSERT_EQUAL(0U, item);
-        TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
-        TEST_ASSERT_EQUAL(0U, item);
-        TEST_ASSERT_TRUE(Queue_IsEmpty(test_Queue));
-        TEST_ASSERT_FALSE(Queue_Peek(test_Queue, &item));
     }
+    for (tests_Queue_Item_t i = 0U; i < TESTS_QUEUE_LENGTH; i++)
+    {
+        TEST_ASSERT_TRUE(Queue_Pop(test_Queue, &item));
+        TEST_ASSERT_EQUAL(i, item);
+    }
+    TEST_ASSERT_TRUE(Queue_IsEmpty(test_Queue));
 }
 
 void tests_Queue_Reset(void)
