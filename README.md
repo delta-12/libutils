@@ -1,1 +1,3 @@
-# c-utils
+# libutils
+
+Collection of C utils.
