@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<suppressions>
+    <suppress>
+        <id>missingInclude</id>
+    </suppress>
+    <suppress>
+        <id>missingIncludeSystem</id>
+    </suppress>
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>*/Queue/tests/tests_Queue.c</fileName>
+        <symbolName>setUp</symbolName>
+    </suppress>
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>*/Queue/tests/tests_Queue.c</fileName>
+        <symbolName>tearDown</symbolName>
+    </suppress>
+</suppressions>

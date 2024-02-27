@@ -14,7 +14,7 @@
 /* Function Prototypes
  ******************************************************************************/
 
-static inline void Queue_AdvanceItemOffset(Queue_t *const queue, size_t *const itemOffset);
+static inline void Queue_AdvanceItemOffset(const Queue_t *const queue, size_t *const itemOffset);
 
 /* Function Definitions
  ******************************************************************************/
@@ -96,7 +96,7 @@ bool Queue_Pop(Queue_t *const queue, void *const item)
     return popped;
 }
 
-bool Queue_Peek(Queue_t *const queue, void *const item)
+bool Queue_Peek(const Queue_t *const queue, void *const item)
 {
     bool peeked = false;
 
@@ -129,7 +129,7 @@ bool Queue_Reset(Queue_t *const queue)
     return reset;
 }
 
-bool Queue_IsEmpty(Queue_t *const queue)
+bool Queue_IsEmpty(const Queue_t *const queue)
 {
     bool empty = true;
 
@@ -141,7 +141,7 @@ bool Queue_IsEmpty(Queue_t *const queue)
     return empty;
 }
 
-static inline void Queue_AdvanceItemOffset(Queue_t *const queue, size_t *const itemOffset)
+static inline void Queue_AdvanceItemOffset(const Queue_t *const queue, size_t *const itemOffset)
 {
     if (queue != NULL && itemOffset != NULL)
     {

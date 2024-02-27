@@ -38,8 +38,8 @@ bool Queue_InitStatic(Queue_t *const queue, uint8_t *const buffer, const uint64_
 void Queue_Free(Queue_t *const queue);
 bool Queue_Push(Queue_t *const queue, const void *const item);
 bool Queue_Pop(Queue_t *const queue, void *const item);
-bool Queue_Peek(Queue_t *const queue, void *const item);
+bool Queue_Peek(const Queue_t *const queue, void *const item);
 bool Queue_Reset(Queue_t *const queue);
-bool Queue_IsEmpty(Queue_t *const queue);
+bool Queue_IsEmpty(const Queue_t *const queue);
 
 #endif
