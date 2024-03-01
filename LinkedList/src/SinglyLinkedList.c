@@ -163,7 +163,7 @@ bool SinglyLinkedList_Reset(SinglyLinkedList_t *const list)
     if (list != NULL)
     {
         SinglyLinkedList_Node_t *node = list->Head;
-        SinglyLinkedList_Node_t *nextNode = node->Next;
+        SinglyLinkedList_Node_t *nextNode;
 
         while (node != NULL)
         {
@@ -194,7 +194,45 @@ SinglyLinkedList_Length_t SinglyLinkedList_GetLength(const SinglyLinkedList_t *c
     return length;
 }
 
-bool SinglyLinkedList_Insert(SinglyLinkedList_t *const list, const SinglyLinkedList_Index_t index, const void *const item) { return false; }
+bool SinglyLinkedList_Insert(SinglyLinkedList_t *const list, const SinglyLinkedList_Index_t index, const void *const item)
+{
+    bool inserted = false;
+
+    if (list != NULL && item != NULL)
+    {
+        if (index == 0L)
+        {
+            inserted = SinglyLinkedList_AppendLeft(list, item);
+        }
+        else if (index > 0L && index < list->Length)
+        {
+            SinglyLinkedList_Node_t *newNode = (SinglyLinkedList_Node_t *)malloc(sizeof(SinglyLinkedList_Node_t) + list->ItemSize);
+            SinglyLinkedList_Node_t *node = list->Head;
+            SinglyLinkedList_Node_t *previousNode = list->Head;
+            SinglyLinkedList_Index_t nodeIndex = 0L;
+
+            while (nodeIndex < index)
+            {
+                previousNode = node;
+                node = node->Next;
+                nodeIndex++;
+            }
+
+            previousNode->Next = newNode;
+            newNode->Next = node->Next;
+            newNode->Item = (uint8_t *)((void *)newNode + sizeof(SinglyLinkedList_Node_t));
+            memcpy(newNode->Item, item, list->ItemSize);
+
+            inserted = true;
+        }
+        else if (index > list->Length)
+        {
+            inserted = SinglyLinkedList_Append(list, item);
+        }
+    }
+
+    return inserted;
+}
 
 bool SinglyLinkedList_Remove(SinglyLinkedList_t *const list, const SinglyLinkedList_Index_t index, void *const item)
 {

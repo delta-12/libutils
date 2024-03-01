@@ -3,3 +3,6 @@ build
 
 # Doxygen
 docs
+
+# VS Code
+.vscode
