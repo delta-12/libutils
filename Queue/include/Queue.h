@@ -21,7 +21,7 @@
 /* Definition of a queue */
 typedef struct
 {
-    uint8_t *Buffer;   /* Pointer to buffer large enough to store the maximum number of items the queue can hold */
+    uint8_t *Buffer;   /* Pointer to a buffer large enough to store the maximum number of items the queue can hold */
     uint64_t Length;   /* Maximum number of items the queue can hold */
     size_t ItemSize;   /* Size of each item in the queue */
     size_t BufferSize; /* Size of the buffer holding items in the queue */
