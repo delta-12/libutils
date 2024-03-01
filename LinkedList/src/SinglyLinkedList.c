@@ -174,6 +174,8 @@ bool SinglyLinkedList_Reset(SinglyLinkedList_t *const list)
 
         list->Head = NULL;
         list->Length = 0L;
+
+        reset = true;
     }
 
     return reset;
