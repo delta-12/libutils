@@ -11,6 +11,12 @@
 #include "SinglyLinkedList.h"
 #include <string.h>
 
+/* Defines
+ ******************************************************************************/
+
+#define SINGLY_LINKED_LIST_INDEX_ERROR (-1L)  /* Value to return if there is an indexing error */
+#define SINGLY_LINKED_LIST_LENGTH_ERROR (-1L) /* Value to return if there is an error with the length of a list */
+
 /* Function Definitions
  ******************************************************************************/
 
@@ -181,12 +187,33 @@ bool SinglyLinkedList_Reset(SinglyLinkedList_t *const list)
     return reset;
 }
 
-/* TODO return -1 if error or not found */
-SinglyLinkedList_Index_t SinglyLinkedList_GetIndex(const SinglyLinkedList_t *const list, const void *const item) { return 0L; }
+SinglyLinkedList_Index_t SinglyLinkedList_GetIndex(const SinglyLinkedList_t *const list, const void *const item)
+{
+    SinglyLinkedList_Index_t index = SINGLY_LINKED_LIST_INDEX_ERROR;
+
+    if (list != NULL && item != NULL)
+    {
+        SinglyLinkedList_Node_t *node = list->Head;
+        SinglyLinkedList_Index_t nodeIndex = 0L;
+
+        while (index == SINGLY_LINKED_LIST_INDEX_ERROR && node != NULL)
+        {
+            if (memcmp(node->Item, item, list->ItemSize) == 0L)
+            {
+                index = nodeIndex;
+            }
+
+            node = node->Next;
+            nodeIndex++;
+        }
+    }
+
+    return index;
+}
 
 SinglyLinkedList_Length_t SinglyLinkedList_GetLength(const SinglyLinkedList_t *const list)
 {
-    SinglyLinkedList_Length_t length = -1L;
+    SinglyLinkedList_Length_t length = SINGLY_LINKED_LIST_LENGTH_ERROR;
 
     if (list != NULL)
     {
