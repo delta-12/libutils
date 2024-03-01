@@ -221,13 +221,14 @@ bool SinglyLinkedList_Insert(SinglyLinkedList_t *const list, const SinglyLinkedL
             }
 
             previousNode->Next = newNode;
-            newNode->Next = node->Next;
+            newNode->Next = node;
             newNode->Item = (uint8_t *)newNode + sizeof(SinglyLinkedList_Node_t);
             memcpy(newNode->Item, item, list->ItemSize);
+            list->Length++;
 
             inserted = true;
         }
-        else if (index > list->Length)
+        else if (index >= list->Length)
         {
             inserted = SinglyLinkedList_Append(list, item);
         }

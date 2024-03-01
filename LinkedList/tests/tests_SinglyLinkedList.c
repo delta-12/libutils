@@ -261,7 +261,73 @@ void test_SinglyLinkedList_GetLength(void)
     TEST_ASSERT_EQUAL(0UL, SinglyLinkedList_GetLength(&tests_SinglyLinkedList_List));
 }
 
-void test_SinglyLinkedList_InsertRemove(void) { TEST_ASSERT_TRUE(false); }
+void test_SinglyLinkedList_Insert(void)
+{
+    SinglyLinkedList_Reset(&tests_SinglyLinkedList_List);
+
+    TEST_ASSERT_FALSE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 0L, NULL));
+    TEST_ASSERT_FALSE(SinglyLinkedList_Insert(NULL, 0L, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_FALSE(SinglyLinkedList_Insert(NULL, 0L, NULL));
+    TEST_ASSERT_FALSE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, -1L, &tests_SinglyLinkedList_Item));
+
+    tests_SinglyLinkedList_Item = 5UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 0L, &tests_SinglyLinkedList_Item));
+    tests_SinglyLinkedList_Item = 2UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 0L, &tests_SinglyLinkedList_Item));
+    tests_SinglyLinkedList_Item = 0UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 0L, &tests_SinglyLinkedList_Item));
+    tests_SinglyLinkedList_Item = 1UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 1L, &tests_SinglyLinkedList_Item));
+    tests_SinglyLinkedList_Item = 3UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 3L, &tests_SinglyLinkedList_Item));
+    tests_SinglyLinkedList_Item = 4UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 4L, &tests_SinglyLinkedList_Item));
+    tests_SinglyLinkedList_Item = 6UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 6L, &tests_SinglyLinkedList_Item));
+    tests_SinglyLinkedList_Item = 10UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 10L, &tests_SinglyLinkedList_Item));
+
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(0UL, tests_SinglyLinkedList_Item);
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(1UL, tests_SinglyLinkedList_Item);
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(2UL, tests_SinglyLinkedList_Item);
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(3UL, tests_SinglyLinkedList_Item);
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(4UL, tests_SinglyLinkedList_Item);
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(5UL, tests_SinglyLinkedList_Item);
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(6UL, tests_SinglyLinkedList_Item);
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(10UL, tests_SinglyLinkedList_Item);
+
+    tests_SinglyLinkedList_Item = 0UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 10L, &tests_SinglyLinkedList_Item));
+    tests_SinglyLinkedList_Item = 1UL;
+    TEST_ASSERT_TRUE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, 1L, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_FALSE(SinglyLinkedList_Insert(&tests_SinglyLinkedList_List, -1L, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(0UL, tests_SinglyLinkedList_Item);
+    TEST_ASSERT_TRUE(SinglyLinkedList_PopLeft(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(1UL, tests_SinglyLinkedList_Item);
+}
+
+void test_SinglyLinkedList_Remove(void)
+{
+    SinglyLinkedList_Reset(&tests_SinglyLinkedList_List);
+
+    TEST_ASSERT_FALSE(SinglyLinkedList_Remove(&tests_SinglyLinkedList_List, 0L, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_FALSE(SinglyLinkedList_Remove(&tests_SinglyLinkedList_List, 0L, NULL));
+    TEST_ASSERT_FALSE(SinglyLinkedList_Remove(NULL, 0L, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_FALSE(SinglyLinkedList_Remove(NULL, 0L, NULL));
+
+    /* TODO remove with negative index */
+
+    TEST_ASSERT_TRUE(false);
+}
 
 int main(void)
 {
@@ -275,7 +341,8 @@ int main(void)
     RUN_TEST(test_SinglyLinkedList_FreeReset);
     RUN_TEST(test_SinglyLinkedList_GetIndex);
     RUN_TEST(test_SinglyLinkedList_GetLength);
-    RUN_TEST(test_SinglyLinkedList_InsertRemove);
+    RUN_TEST(test_SinglyLinkedList_Insert);
+    RUN_TEST(test_SinglyLinkedList_Remove);
 
     return UNITY_END();
 }
