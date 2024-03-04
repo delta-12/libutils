@@ -231,10 +231,10 @@ void test_SinglyLinkedList_GetIndex(void)
     SinglyLinkedList_Reset(&tests_SinglyLinkedList_List);
 
     tests_SinglyLinkedList_Item = 0UL;
-    TEST_ASSERT_EQUAL(-1L, SinglyLinkedList_GetIndex(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
-    TEST_ASSERT_EQUAL(-1L, SinglyLinkedList_GetIndex(NULL, &tests_SinglyLinkedList_Item));
-    TEST_ASSERT_EQUAL(-1L, SinglyLinkedList_GetIndex(&tests_SinglyLinkedList_List, NULL));
-    TEST_ASSERT_EQUAL(-1L, SinglyLinkedList_GetIndex(NULL, NULL));
+    TEST_ASSERT_EQUAL(SINGLY_LINKED_LIST_INDEX_ERROR, SinglyLinkedList_GetIndex(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(SINGLY_LINKED_LIST_INDEX_ERROR, SinglyLinkedList_GetIndex(NULL, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(SINGLY_LINKED_LIST_INDEX_ERROR, SinglyLinkedList_GetIndex(&tests_SinglyLinkedList_List, NULL));
+    TEST_ASSERT_EQUAL(SINGLY_LINKED_LIST_INDEX_ERROR, SinglyLinkedList_GetIndex(NULL, NULL));
 
     for (tests_SinglyLinkedList_Item_t i = 0UL; i < 8UL; i++)
     {
@@ -245,12 +245,15 @@ void test_SinglyLinkedList_GetIndex(void)
         TEST_ASSERT_EQUAL(i, SinglyLinkedList_GetIndex(&tests_SinglyLinkedList_List, &i));
     }
     tests_SinglyLinkedList_Item = 8UL;
-    TEST_ASSERT_EQUAL(-1L, SinglyLinkedList_GetIndex(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
+    TEST_ASSERT_EQUAL(SINGLY_LINKED_LIST_INDEX_ERROR, SinglyLinkedList_GetIndex(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item));
 }
 
 void test_SinglyLinkedList_GetLength(void)
 {
     SinglyLinkedList_Reset(&tests_SinglyLinkedList_List);
+
+    TEST_ASSERT_EQUAL(SINGLY_LINKED_LIST_LENGTH_ERROR, SinglyLinkedList_GetLength(NULL));
+
     tests_SinglyLinkedList_Item = 0UL;
     TEST_ASSERT_EQUAL(0UL, SinglyLinkedList_GetLength(&tests_SinglyLinkedList_List));
     SinglyLinkedList_Append(&tests_SinglyLinkedList_List, &tests_SinglyLinkedList_Item);

@@ -15,6 +15,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+/* Defines
+ ******************************************************************************/
+
+#define SINGLY_LINKED_LIST_INDEX_ERROR (-1L)  /* Value to return if there is an indexing error */
+#define SINGLY_LINKED_LIST_LENGTH_ERROR (-1L) /* Value to return if there is an error with the length of a list */
+
 /* Typedefs
  ******************************************************************************/
 
