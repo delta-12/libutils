@@ -154,7 +154,29 @@ bool DoublyLinkedList_Reset(DoublyLinkedList_t *const list)
  *
  * @retval DOUBLY_LINKED_LIST_INDEX_ERROR Failed to get the index of the item
  ******************************************************************************/
-DoublyLinkedList_Index_t DoublyLinkedList_GetIndex(const DoublyLinkedList_t *const list, const void *const item) { return DOUBLY_LINKED_LIST_INDEX_ERROR; }
+DoublyLinkedList_Index_t DoublyLinkedList_GetIndex(const DoublyLinkedList_t *const list, const void *const item)
+{
+    DoublyLinkedList_Index_t index = DOUBLY_LINKED_LIST_INDEX_ERROR;
+
+    if (list != NULL && item != NULL)
+    {
+        const DoublyLinkedList_Node_t *node = list->Head;
+        DoublyLinkedList_Index_t nodeIndex = 0L;
+
+        while (index == DOUBLY_LINKED_LIST_INDEX_ERROR && node != NULL)
+        {
+            if (memcmp(node->Item, item, list->ItemSize) == 0L)
+            {
+                index = nodeIndex;
+            }
+
+            node = node->Next;
+            nodeIndex++;
+        }
+    }
+
+    return index;
+}
 
 /**
  * @brief Get the length of a doubly linked list.
