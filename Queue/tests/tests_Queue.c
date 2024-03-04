@@ -1,10 +1,11 @@
 #include "unity.h"
 #include "Queue.h"
 
-typedef uint8_t tests_Queue_Item_t;
-
+#define TESTS_QUEUE_ITEM uint8_t
 #define TESTS_QUEUE_LENGTH 10UL
-#define TESTS_QUEUE_ITEM_SIZE sizeof(tests_Queue_Item_t)
+#define TESTS_QUEUE_ITEM_SIZE sizeof(TESTS_QUEUE_ITEM)
+
+typedef TESTS_QUEUE_ITEM tests_Queue_Item_t;
 
 static Queue_t *test_Queue;
 static uint8_t test_QueueStaticBuffer[TESTS_QUEUE_LENGTH * TESTS_QUEUE_ITEM_SIZE];
