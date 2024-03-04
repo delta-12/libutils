@@ -25,17 +25,35 @@
  * @retval true  Successfully initialized
  * @retval false Failed to initialize
  ******************************************************************************/
-bool DoublyLinkedList_Init(DoublyLinkedList_t *const list, const size_t itemSize) { return false; }
+bool DoublyLinkedList_Init(DoublyLinkedList_t *const list, const size_t itemSize)
+{
+    bool init = false;
+
+    if (list != NULL)
+    {
+        list->Head = NULL;
+        list->Tail = NULL;
+        list->Length = 0L;
+        list->ItemSize = itemSize;
+
+        init = true;
+    }
+
+    return init;
+}
 
 /**
  * @brief Free a doubly linked list.
  *
  * @param[in,out] list Pointer to the list to free
  *
- * @note This function merely calls SinglyLinkedList_Reset.  See the
- *       documentation for SinglyLinkedList_Reset for more information.
+ * @note This function merely calls DoublyLinkedList_Reset.  See the
+ *       documentation for DoublyLinkedList_Reset for more information.
  ******************************************************************************/
-bool DoublyLinkedList_Free(DoublyLinkedList_t *const list) { return false; }
+bool DoublyLinkedList_Free(DoublyLinkedList_t *const list)
+{
+    return DoublyLinkedList_Reset(list);
+}
 
 /**
  * @brief Append an item to the end of a doubly linked list.  Items are stored
@@ -100,7 +118,31 @@ bool DoublyLinkedList_PopLeft(DoublyLinkedList_t *const list, void *const item) 
  *
  * @param[in,out] list Pointer to the list to reset
  ******************************************************************************/
-bool DoublyLinkedList_Reset(DoublyLinkedList_t *const list) { return false; }
+bool DoublyLinkedList_Reset(DoublyLinkedList_t *const list)
+{
+    bool reset = false;
+
+    if (list != NULL)
+    {
+        DoublyLinkedList_Node_t *node = list->Head;
+        DoublyLinkedList_Node_t *nextNode;
+
+        while (node != NULL)
+        {
+            nextNode = node->Next;
+            free(node);
+            node = nextNode;
+        }
+
+        list->Head = NULL;
+        list->Tail = NULL;
+        list->Length = 0L;
+
+        reset = true;
+    }
+
+    return reset;
+}
 
 /**
  * @brief Get the index of an item in a doubly linked list.
@@ -124,7 +166,17 @@ DoublyLinkedList_Index_t DoublyLinkedList_GetIndex(const DoublyLinkedList_t *con
  * @retval DOUBLY_LINKED_LIST_LENGTH_ERROR Failed to get the length of the
  *                                         list
  ******************************************************************************/
-DoublyLinkedList_Length_t DoublyLinkedList_GetLength(const DoublyLinkedList_t *const list) { return DOUBLY_LINKED_LIST_LENGTH_ERROR; }
+DoublyLinkedList_Length_t DoublyLinkedList_GetLength(const DoublyLinkedList_t *const list)
+{
+    DoublyLinkedList_Length_t length = DOUBLY_LINKED_LIST_LENGTH_ERROR;
+
+    if (list != NULL)
+    {
+        length = list->Length;
+    }
+
+    return length;
+}
 
 /**
  * @brief Insert an item into a doubly linked list at an index.  Items are

@@ -213,6 +213,7 @@ void test_DoublyLinkedList_FreeReset(void)
     TEST_ASSERT_EQUAL(3UL, DoublyLinkedList_GetLength(&tests_DoublyLinkedList_List));
     TEST_ASSERT_TRUE(DoublyLinkedList_Free(&tests_DoublyLinkedList_List));
     TEST_ASSERT_NULL(tests_DoublyLinkedList_List.Head);
+    TEST_ASSERT_NULL(tests_DoublyLinkedList_List.Tail);
     TEST_ASSERT_EQUAL(0UL, DoublyLinkedList_GetLength(&tests_DoublyLinkedList_List));
     TEST_ASSERT_TRUE(DoublyLinkedList_Free(&tests_DoublyLinkedList_List));
 
@@ -223,6 +224,7 @@ void test_DoublyLinkedList_FreeReset(void)
     TEST_ASSERT_EQUAL(3UL, DoublyLinkedList_GetLength(&tests_DoublyLinkedList_List));
     TEST_ASSERT_TRUE(DoublyLinkedList_Reset(&tests_DoublyLinkedList_List));
     TEST_ASSERT_NULL(tests_DoublyLinkedList_List.Head);
+    TEST_ASSERT_NULL(tests_DoublyLinkedList_List.Tail);
     TEST_ASSERT_EQUAL(0UL, DoublyLinkedList_GetLength(&tests_DoublyLinkedList_List));
     TEST_ASSERT_TRUE(DoublyLinkedList_Reset(&tests_DoublyLinkedList_List));
 }
