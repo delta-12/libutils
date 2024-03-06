@@ -67,7 +67,38 @@ bool DoublyLinkedList_Free(DoublyLinkedList_t *const list)
  * @retval true  Successfully appended the item to the list
  * @retval false Failed to append the item to the list
  ******************************************************************************/
-bool DoublyLinkedList_Append(DoublyLinkedList_t *const list, const void *const item) { return false; }
+bool DoublyLinkedList_Append(DoublyLinkedList_t *const list, const void *const item)
+{
+    bool appended = false;
+
+    if (list != NULL && item != NULL)
+    {
+        DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
+
+        newNode->Next = NULL;
+        newNode->Previous = NULL;
+        newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
+        memcpy(newNode->Item, item, list->ItemSize);
+
+        if (list->Tail == NULL)
+        {
+            list->Head = newNode;
+            list->Tail = newNode;
+        }
+        else
+        {
+            list->Tail->Next = newNode;
+            newNode->Previous = list->Tail;
+            list->Tail = newNode;
+        }
+
+        list->Length++;
+
+        appended = true;
+    }
+
+    return appended;
+}
 
 /**
  * @brief Add an item to the beginning of a doubly linked list.  Items are
@@ -96,7 +127,33 @@ bool DoublyLinkedList_AppendLeft(DoublyLinkedList_t *const list, const void *con
  * @retval true  Successfully popped the item from the list
  * @retval false Failed to pop the item from the list
  ******************************************************************************/
-bool DoublyLinkedList_Pop(DoublyLinkedList_t *const list, void *const item) { return false; }
+bool DoublyLinkedList_Pop(DoublyLinkedList_t *const list, void *const item)
+{
+    bool popped = false;
+
+    if (list != NULL && list->Tail != NULL)
+    {
+        DoublyLinkedList_Node_t *newTail = list->Tail->Previous;
+
+        if (item != NULL)
+        {
+            memcpy(item, list->Tail->Item, list->ItemSize);
+        }
+
+        free(list->Tail);
+        list->Length--;
+        list->Tail = newTail;
+
+        if (list->Tail == NULL)
+        {
+            list->Head = NULL;
+        }
+
+        popped = true;
+    }
+
+    return popped;
+}
 
 /**
  * @brief Pop an item from the beginning of a doubly linked list.
