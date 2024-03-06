@@ -113,7 +113,38 @@ bool DoublyLinkedList_Append(DoublyLinkedList_t *const list, const void *const i
  * @retval true  Successfully appended the item to the left of the list
  * @retval false Failed to append the item to the left of the list
  ******************************************************************************/
-bool DoublyLinkedList_AppendLeft(DoublyLinkedList_t *const list, const void *const item) { return false; }
+bool DoublyLinkedList_AppendLeft(DoublyLinkedList_t *const list, const void *const item)
+{
+    bool appended = false;
+
+    if (list != NULL && item != NULL)
+    {
+        DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
+
+        newNode->Next = NULL;
+        newNode->Previous = NULL;
+        newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
+        memcpy(newNode->Item, item, list->ItemSize);
+
+        if (list->Head == NULL)
+        {
+            list->Head = newNode;
+            list->Tail = newNode;
+        }
+        else
+        {
+            list->Head->Previous = newNode;
+            newNode->Next = list->Head;
+            list->Head = newNode;
+        }
+
+        list->Length++;
+
+        appended = true;
+    }
+
+    return appended;
+}
 
 /**
  * @brief Pop an item from the end of a doubly linked list.
@@ -168,7 +199,33 @@ bool DoublyLinkedList_Pop(DoublyLinkedList_t *const list, void *const item)
  * @retval true  Successfully popped the item from the left of the list
  * @retval false Failed to pop the item from the left of the list
  ******************************************************************************/
-bool DoublyLinkedList_PopLeft(DoublyLinkedList_t *const list, void *const item) { return false; }
+bool DoublyLinkedList_PopLeft(DoublyLinkedList_t *const list, void *const item)
+{
+    bool popped = false;
+
+    if (list != NULL && list->Head != NULL)
+    {
+        DoublyLinkedList_Node_t *newHead = list->Head->Next;
+
+        if (item != NULL)
+        {
+            memcpy(item, list->Head->Item, list->ItemSize);
+        }
+
+        free(list->Head);
+        list->Length--;
+        list->Head = newHead;
+
+        if (list->Head == NULL)
+        {
+            list->Tail = NULL;
+        }
+
+        popped = true;
+    }
+
+    return popped;
+}
 
 /**
  * @brief Reset a doubly linked list to its initial state and free all nodes.
