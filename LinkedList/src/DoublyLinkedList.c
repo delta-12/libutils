@@ -330,7 +330,46 @@ DoublyLinkedList_Length_t DoublyLinkedList_GetLength(const DoublyLinkedList_t *c
  * @retval true  Successfully inserted the item into the list
  * @retval false Failed to insert the item into the list
  ******************************************************************************/
-bool DoublyLinkedList_Insert(DoublyLinkedList_t *const list, const DoublyLinkedList_Index_t index, const void *const item) { return false; }
+bool DoublyLinkedList_Insert(DoublyLinkedList_t *const list, const DoublyLinkedList_Index_t index, const void *const item)
+{
+    bool inserted = false;
+
+    if (list != NULL && item != NULL)
+    {
+        if (index == 0L)
+        {
+            inserted = DoublyLinkedList_AppendLeft(list, item);
+        }
+        else if (index > 0L && index < list->Length)
+        {
+            DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
+            DoublyLinkedList_Node_t *node = list->Head;
+            DoublyLinkedList_Index_t nodeIndex = 0L;
+
+            while (nodeIndex < index)
+            {
+                node = node->Next;
+                nodeIndex++;
+            }
+
+            newNode->Previous = node->Previous;
+            newNode->Next = node;
+            newNode->Previous->Next = newNode;
+            newNode->Next->Previous = newNode;
+            newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
+            memcpy(newNode->Item, item, list->ItemSize);
+            list->Length++;
+
+            inserted = true;
+        }
+        else if (index >= list->Length)
+        {
+            inserted = DoublyLinkedList_Append(list, item);
+        }
+    }
+
+    return inserted;
+}
 
 /**
  * @brief Remove an item from a doubly linked list at an index.
