@@ -385,4 +385,52 @@ bool DoublyLinkedList_Insert(DoublyLinkedList_t *const list, const DoublyLinkedL
  * @retval true  Successfully removed the item from the list
  * @retval false Failed to remove the item from the list
  ******************************************************************************/
-bool DoublyLinkedList_Remove(DoublyLinkedList_t *const list, const DoublyLinkedList_Index_t index, void *const item) { return false; }
+bool DoublyLinkedList_Remove(DoublyLinkedList_t *const list, const DoublyLinkedList_Index_t index, void *const item)
+{
+    bool removed = false;
+
+    if (list != NULL && list->Head != NULL)
+    {
+        if (index >= 0L && index < list->Length)
+        {
+            DoublyLinkedList_Node_t *node = list->Head;
+            DoublyLinkedList_Index_t nodeIndex = 0L;
+
+            while (nodeIndex < index)
+            {
+                node = node->Next;
+                nodeIndex++;
+            }
+
+            if (item != NULL)
+            {
+                memcpy(item, node->Item, list->ItemSize);
+            }
+
+            if (node->Previous != NULL)
+            {
+                node->Previous->Next = node->Next;
+            }
+            if (node->Next != NULL)
+            {
+                node->Next->Previous = node->Previous;
+            }
+
+            if (node == list->Head)
+            {
+                list->Head = node->Next;
+            }
+            if (node == list->Tail)
+            {
+                list->Tail = node->Previous;
+            }
+
+            free(node);
+            list->Length--;
+
+            removed = true;
+        }
+    }
+
+    return removed;
+}
