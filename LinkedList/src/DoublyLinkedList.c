@@ -179,6 +179,10 @@ bool DoublyLinkedList_Pop(DoublyLinkedList_t *const list, void *const item)
         {
             list->Head = NULL;
         }
+        else
+        {
+            list->Tail->Next = NULL;
+        }
 
         popped = true;
     }
@@ -219,6 +223,10 @@ bool DoublyLinkedList_PopLeft(DoublyLinkedList_t *const list, void *const item)
         if (list->Head == NULL)
         {
             list->Tail = NULL;
+        }
+        else
+        {
+            list->Head->Previous = NULL;
         }
 
         popped = true;
@@ -391,7 +399,13 @@ bool DoublyLinkedList_Remove(DoublyLinkedList_t *const list, const DoublyLinkedL
 
     if (list != NULL && list->Head != NULL)
     {
-        if (index >= 0L && index < list->Length)
+        DoublyLinkedList_Index_t lastIndex = list->Length - 1L;
+
+        if (index == 0L)
+        {
+            removed = DoublyLinkedList_PopLeft(list, item);
+        }
+        else if (index > 0L && index < lastIndex)
         {
             DoublyLinkedList_Node_t *node = list->Head;
             DoublyLinkedList_Index_t nodeIndex = 0L;
@@ -407,28 +421,16 @@ bool DoublyLinkedList_Remove(DoublyLinkedList_t *const list, const DoublyLinkedL
                 memcpy(item, node->Item, list->ItemSize);
             }
 
-            if (node->Previous != NULL)
-            {
-                node->Previous->Next = node->Next;
-            }
-            if (node->Next != NULL)
-            {
-                node->Next->Previous = node->Previous;
-            }
-
-            if (node == list->Head)
-            {
-                list->Head = node->Next;
-            }
-            if (node == list->Tail)
-            {
-                list->Tail = node->Previous;
-            }
-
+            node->Previous->Next = node->Next;
+            node->Next->Previous = node->Previous;
             free(node);
             list->Length--;
 
             removed = true;
+        }
+        else if (index == lastIndex)
+        {
+            removed = DoublyLinkedList_Pop(list, item);
         }
     }
 
