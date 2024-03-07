@@ -269,7 +269,7 @@ SinglyLinkedList_Index_t SinglyLinkedList_GetIndex(const SinglyLinkedList_t *con
 
     if (list != NULL && item != NULL)
     {
-        SinglyLinkedList_Node_t *node = list->Head;
+        const SinglyLinkedList_Node_t *node = list->Head;
         SinglyLinkedList_Index_t nodeIndex = 0L;
 
         while (index == SINGLY_LINKED_LIST_INDEX_ERROR && node != NULL)
