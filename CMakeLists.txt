@@ -21,3 +21,5 @@ enable_testing()
 add_test(test_DoublyLinkedList test_DoublyLinkedList)
 add_test(test_SinglyLinkedList test_SinglyLinkedList)
 add_test(test_Queue test_Queue)
+
+include(cppcheck.cmake)

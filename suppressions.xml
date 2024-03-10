@@ -8,12 +8,12 @@
     </suppress>
     <suppress>
         <id>unusedFunction</id>
-        <fileName>*/LinkedList/tests/tests_*.c</fileName>
+        <fileName>*/test_*.c</fileName>
         <symbolName>setUp</symbolName>
     </suppress>
     <suppress>
         <id>unusedFunction</id>
-        <fileName>*/LinkedList/tests/tests_*.c</fileName>
+        <fileName>*/test_*.c</fileName>
         <symbolName>tearDown</symbolName>
     </suppress>
 </suppressions>
