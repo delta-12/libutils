@@ -33,7 +33,7 @@ jobs:
         with:
           name: cppcheck-report
           path: libutils/build/cppcheck_report.xml
-  unit-tests:
+  unit-tests-and-valgrind:
     runs-on: ubuntu-latest
     container:
       image: d3lta12/c-utils-tools:latest
@@ -61,11 +61,11 @@ jobs:
         working-directory: ./build
         run: cmake --build . --target test_DoublyLinkedList test_SinglyLinkedList test_Queue
       - name: Test DoublyLinkedList
-        working-directory: ./build
-        run: ./LinkedList/test_DoublyLinkedList
+        working-directory: ./build/LinkedList
+        run: valgrind --leak-check=full -s ./test_DoublyLinkedList
       - name: Test SinglyLinkedList
-        working-directory: ./build
-        run: ./LinkedList/test_SinglyLinkedList
+        working-directory: ./build/LinkedList
+        run: valgrind --leak-check=full -s ./test_SinglyLinkedList
       - name: Test Queue
-        working-directory: ./build
-        run: ./Queue/test_Queue
+        working-directory: ./build/Queue
+        run: valgrind --leak-check=full -s ./test_Queue
