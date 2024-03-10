@@ -1,0 +1,22 @@
+on: [push]
+jobs:
+  cppcheck:
+    runs-on: ubuntu-latest
+    container:
+      image: d3lta12/c-utils-tools:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+      - name: Make build directory
+        run: mkdir build
+      - name: Cppcheck
+        working-directory: ./build
+        run: cmake .. && cmake --build . --target cppcheck
+      - name: Upload Cppcheck Report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: cppcheck-report
+          path: libutils/build/cppcheck_report.xml
