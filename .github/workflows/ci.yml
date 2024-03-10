@@ -9,11 +9,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
-      - name: Make build directory
+      - name: Cache CMake files
+        id: cache-cmake
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-cmake
+        with:
+          path: ./build
+          key: ${{ env.cache-name }}-${{ hashFiles('**/CMakeLists.txt', '**.cmake') }}
+      - if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        name: Make build directory
         run: mkdir build
+      - if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        name: Generate CMake cache
+        working-directory: ./build
+        run: cmake ..
       - name: Cppcheck
         working-directory: ./build
-        run: cmake .. && cmake --build . --target cppcheck
+        run: cmake --build . --target cppcheck
       - name: Upload Cppcheck Report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
