@@ -23,3 +23,4 @@ add_test(test_SinglyLinkedList test_SinglyLinkedList)
 add_test(test_Queue test_Queue)
 
 include(cppcheck.cmake)
+include(doxygen.cmake)
