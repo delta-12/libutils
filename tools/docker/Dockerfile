@@ -26,7 +26,7 @@ RUN git clone https://github.com/danmar/cppcheck.git
 RUN mkdir /opt/cppcheck/build
 WORKDIR /opt/cppcheck/build
 RUN cmake ..
-RUN cmake --build .
+RUN cmake --build . -j$(nproc)
 ENV PATH="${PATH}:/opt/cppcheck/build/bin/"
 
 # Install Doxygen
