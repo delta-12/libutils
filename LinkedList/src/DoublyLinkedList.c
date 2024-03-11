@@ -27,19 +27,19 @@
  ******************************************************************************/
 bool DoublyLinkedList_Init(DoublyLinkedList_t *const list, const size_t itemSize)
 {
-    bool init = false;
+  bool init = false;
 
-    if (list != NULL)
-    {
-        list->Head = NULL;
-        list->Tail = NULL;
-        list->Length = 0L;
-        list->ItemSize = itemSize;
+  if (list != NULL)
+  {
+    list->Head = NULL;
+    list->Tail = NULL;
+    list->Length = 0L;
+    list->ItemSize = itemSize;
 
-        init = true;
-    }
+    init = true;
+  }
 
-    return init;
+  return init;
 }
 
 /**
@@ -52,7 +52,7 @@ bool DoublyLinkedList_Init(DoublyLinkedList_t *const list, const size_t itemSize
  ******************************************************************************/
 bool DoublyLinkedList_Free(DoublyLinkedList_t *const list)
 {
-    return DoublyLinkedList_Reset(list);
+  return DoublyLinkedList_Reset(list);
 }
 
 /**
@@ -69,35 +69,35 @@ bool DoublyLinkedList_Free(DoublyLinkedList_t *const list)
  ******************************************************************************/
 bool DoublyLinkedList_Append(DoublyLinkedList_t *const list, const void *const item)
 {
-    bool appended = false;
+  bool appended = false;
 
-    if (list != NULL && item != NULL)
+  if (list != NULL && item != NULL)
+  {
+    DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
+
+    newNode->Next = NULL;
+    newNode->Previous = NULL;
+    newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
+    memcpy(newNode->Item, item, list->ItemSize);
+
+    if (list->Tail == NULL)
     {
-        DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
-
-        newNode->Next = NULL;
-        newNode->Previous = NULL;
-        newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
-        memcpy(newNode->Item, item, list->ItemSize);
-
-        if (list->Tail == NULL)
-        {
-            list->Head = newNode;
-            list->Tail = newNode;
-        }
-        else
-        {
-            list->Tail->Next = newNode;
-            newNode->Previous = list->Tail;
-            list->Tail = newNode;
-        }
-
-        list->Length++;
-
-        appended = true;
+      list->Head = newNode;
+      list->Tail = newNode;
+    }
+    else
+    {
+      list->Tail->Next = newNode;
+      newNode->Previous = list->Tail;
+      list->Tail = newNode;
     }
 
-    return appended;
+    list->Length++;
+
+    appended = true;
+  }
+
+  return appended;
 }
 
 /**
@@ -115,35 +115,35 @@ bool DoublyLinkedList_Append(DoublyLinkedList_t *const list, const void *const i
  ******************************************************************************/
 bool DoublyLinkedList_AppendLeft(DoublyLinkedList_t *const list, const void *const item)
 {
-    bool appended = false;
+  bool appended = false;
 
-    if (list != NULL && item != NULL)
+  if (list != NULL && item != NULL)
+  {
+    DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
+
+    newNode->Next = NULL;
+    newNode->Previous = NULL;
+    newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
+    memcpy(newNode->Item, item, list->ItemSize);
+
+    if (list->Head == NULL)
     {
-        DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
-
-        newNode->Next = NULL;
-        newNode->Previous = NULL;
-        newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
-        memcpy(newNode->Item, item, list->ItemSize);
-
-        if (list->Head == NULL)
-        {
-            list->Head = newNode;
-            list->Tail = newNode;
-        }
-        else
-        {
-            list->Head->Previous = newNode;
-            newNode->Next = list->Head;
-            list->Head = newNode;
-        }
-
-        list->Length++;
-
-        appended = true;
+      list->Head = newNode;
+      list->Tail = newNode;
+    }
+    else
+    {
+      list->Head->Previous = newNode;
+      newNode->Next = list->Head;
+      list->Head = newNode;
     }
 
-    return appended;
+    list->Length++;
+
+    appended = true;
+  }
+
+  return appended;
 }
 
 /**
@@ -160,34 +160,34 @@ bool DoublyLinkedList_AppendLeft(DoublyLinkedList_t *const list, const void *con
  ******************************************************************************/
 bool DoublyLinkedList_Pop(DoublyLinkedList_t *const list, void *const item)
 {
-    bool popped = false;
+  bool popped = false;
 
-    if (list != NULL && list->Tail != NULL)
+  if (list != NULL && list->Tail != NULL)
+  {
+    DoublyLinkedList_Node_t *newTail = list->Tail->Previous;
+
+    if (item != NULL)
     {
-        DoublyLinkedList_Node_t *newTail = list->Tail->Previous;
-
-        if (item != NULL)
-        {
-            memcpy(item, list->Tail->Item, list->ItemSize);
-        }
-
-        free(list->Tail);
-        list->Length--;
-        list->Tail = newTail;
-
-        if (list->Tail == NULL)
-        {
-            list->Head = NULL;
-        }
-        else
-        {
-            list->Tail->Next = NULL;
-        }
-
-        popped = true;
+      memcpy(item, list->Tail->Item, list->ItemSize);
     }
 
-    return popped;
+    free(list->Tail);
+    list->Length--;
+    list->Tail = newTail;
+
+    if (list->Tail == NULL)
+    {
+      list->Head = NULL;
+    }
+    else
+    {
+      list->Tail->Next = NULL;
+    }
+
+    popped = true;
+  }
+
+  return popped;
 }
 
 /**
@@ -205,34 +205,34 @@ bool DoublyLinkedList_Pop(DoublyLinkedList_t *const list, void *const item)
  ******************************************************************************/
 bool DoublyLinkedList_PopLeft(DoublyLinkedList_t *const list, void *const item)
 {
-    bool popped = false;
+  bool popped = false;
 
-    if (list != NULL && list->Head != NULL)
+  if (list != NULL && list->Head != NULL)
+  {
+    DoublyLinkedList_Node_t *newHead = list->Head->Next;
+
+    if (item != NULL)
     {
-        DoublyLinkedList_Node_t *newHead = list->Head->Next;
-
-        if (item != NULL)
-        {
-            memcpy(item, list->Head->Item, list->ItemSize);
-        }
-
-        free(list->Head);
-        list->Length--;
-        list->Head = newHead;
-
-        if (list->Head == NULL)
-        {
-            list->Tail = NULL;
-        }
-        else
-        {
-            list->Head->Previous = NULL;
-        }
-
-        popped = true;
+      memcpy(item, list->Head->Item, list->ItemSize);
     }
 
-    return popped;
+    free(list->Head);
+    list->Length--;
+    list->Head = newHead;
+
+    if (list->Head == NULL)
+    {
+      list->Tail = NULL;
+    }
+    else
+    {
+      list->Head->Previous = NULL;
+    }
+
+    popped = true;
+  }
+
+  return popped;
 }
 
 /**
@@ -242,28 +242,28 @@ bool DoublyLinkedList_PopLeft(DoublyLinkedList_t *const list, void *const item)
  ******************************************************************************/
 bool DoublyLinkedList_Reset(DoublyLinkedList_t *const list)
 {
-    bool reset = false;
+  bool reset = false;
 
-    if (list != NULL)
+  if (list != NULL)
+  {
+    DoublyLinkedList_Node_t *node = list->Head;
+    DoublyLinkedList_Node_t *nextNode;
+
+    while (node != NULL)
     {
-        DoublyLinkedList_Node_t *node = list->Head;
-        DoublyLinkedList_Node_t *nextNode;
-
-        while (node != NULL)
-        {
-            nextNode = node->Next;
-            free(node);
-            node = nextNode;
-        }
-
-        list->Head = NULL;
-        list->Tail = NULL;
-        list->Length = 0L;
-
-        reset = true;
+      nextNode = node->Next;
+      free(node);
+      node = nextNode;
     }
 
-    return reset;
+    list->Head = NULL;
+    list->Tail = NULL;
+    list->Length = 0L;
+
+    reset = true;
+  }
+
+  return reset;
 }
 
 /**
@@ -278,26 +278,26 @@ bool DoublyLinkedList_Reset(DoublyLinkedList_t *const list)
  ******************************************************************************/
 DoublyLinkedList_Index_t DoublyLinkedList_GetIndex(const DoublyLinkedList_t *const list, const void *const item)
 {
-    DoublyLinkedList_Index_t index = DOUBLY_LINKED_LIST_INDEX_ERROR;
+  DoublyLinkedList_Index_t index = DOUBLY_LINKED_LIST_INDEX_ERROR;
 
-    if (list != NULL && item != NULL)
+  if (list != NULL && item != NULL)
+  {
+    const DoublyLinkedList_Node_t *node = list->Head;
+    DoublyLinkedList_Index_t nodeIndex = 0L;
+
+    while (index == DOUBLY_LINKED_LIST_INDEX_ERROR && node != NULL)
     {
-        const DoublyLinkedList_Node_t *node = list->Head;
-        DoublyLinkedList_Index_t nodeIndex = 0L;
+      if (memcmp(node->Item, item, list->ItemSize) == 0L)
+      {
+        index = nodeIndex;
+      }
 
-        while (index == DOUBLY_LINKED_LIST_INDEX_ERROR && node != NULL)
-        {
-            if (memcmp(node->Item, item, list->ItemSize) == 0L)
-            {
-                index = nodeIndex;
-            }
-
-            node = node->Next;
-            nodeIndex++;
-        }
+      node = node->Next;
+      nodeIndex++;
     }
+  }
 
-    return index;
+  return index;
 }
 
 /**
@@ -312,14 +312,14 @@ DoublyLinkedList_Index_t DoublyLinkedList_GetIndex(const DoublyLinkedList_t *con
  ******************************************************************************/
 DoublyLinkedList_Length_t DoublyLinkedList_GetLength(const DoublyLinkedList_t *const list)
 {
-    DoublyLinkedList_Length_t length = DOUBLY_LINKED_LIST_LENGTH_ERROR;
+  DoublyLinkedList_Length_t length = DOUBLY_LINKED_LIST_LENGTH_ERROR;
 
-    if (list != NULL)
-    {
-        length = list->Length;
-    }
+  if (list != NULL)
+  {
+    length = list->Length;
+  }
 
-    return length;
+  return length;
 }
 
 /**
@@ -340,43 +340,43 @@ DoublyLinkedList_Length_t DoublyLinkedList_GetLength(const DoublyLinkedList_t *c
  ******************************************************************************/
 bool DoublyLinkedList_Insert(DoublyLinkedList_t *const list, const DoublyLinkedList_Index_t index, const void *const item)
 {
-    bool inserted = false;
+  bool inserted = false;
 
-    if (list != NULL && item != NULL)
+  if (list != NULL && item != NULL)
+  {
+    if (index == 0L)
     {
-        if (index == 0L)
-        {
-            inserted = DoublyLinkedList_AppendLeft(list, item);
-        }
-        else if (index > 0L && index < list->Length)
-        {
-            DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
-            DoublyLinkedList_Node_t *node = list->Head;
-            DoublyLinkedList_Index_t nodeIndex = 0L;
-
-            while (nodeIndex < index)
-            {
-                node = node->Next;
-                nodeIndex++;
-            }
-
-            newNode->Previous = node->Previous;
-            newNode->Next = node;
-            newNode->Previous->Next = newNode;
-            newNode->Next->Previous = newNode;
-            newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
-            memcpy(newNode->Item, item, list->ItemSize);
-            list->Length++;
-
-            inserted = true;
-        }
-        else if (index >= list->Length)
-        {
-            inserted = DoublyLinkedList_Append(list, item);
-        }
+      inserted = DoublyLinkedList_AppendLeft(list, item);
     }
+    else if (index > 0L && index < list->Length)
+    {
+      DoublyLinkedList_Node_t *newNode = (DoublyLinkedList_Node_t *)malloc(sizeof(DoublyLinkedList_Node_t) + list->ItemSize);
+      DoublyLinkedList_Node_t *node = list->Head;
+      DoublyLinkedList_Index_t nodeIndex = 0L;
 
-    return inserted;
+      while (nodeIndex < index)
+      {
+        node = node->Next;
+        nodeIndex++;
+      }
+
+      newNode->Previous = node->Previous;
+      newNode->Next = node;
+      newNode->Previous->Next = newNode;
+      newNode->Next->Previous = newNode;
+      newNode->Item = (uint8_t *)newNode + sizeof(DoublyLinkedList_Node_t);
+      memcpy(newNode->Item, item, list->ItemSize);
+      list->Length++;
+
+      inserted = true;
+    }
+    else if (index >= list->Length)
+    {
+      inserted = DoublyLinkedList_Append(list, item);
+    }
+  }
+
+  return inserted;
 }
 
 /**
@@ -395,44 +395,44 @@ bool DoublyLinkedList_Insert(DoublyLinkedList_t *const list, const DoublyLinkedL
  ******************************************************************************/
 bool DoublyLinkedList_Remove(DoublyLinkedList_t *const list, const DoublyLinkedList_Index_t index, void *const item)
 {
-    bool removed = false;
+  bool removed = false;
 
-    if (list != NULL && list->Head != NULL)
+  if (list != NULL && list->Head != NULL)
+  {
+    DoublyLinkedList_Index_t lastIndex = list->Length - 1L;
+
+    if (index == 0L)
     {
-        DoublyLinkedList_Index_t lastIndex = list->Length - 1L;
-
-        if (index == 0L)
-        {
-            removed = DoublyLinkedList_PopLeft(list, item);
-        }
-        else if (index > 0L && index < lastIndex)
-        {
-            DoublyLinkedList_Node_t *node = list->Head;
-            DoublyLinkedList_Index_t nodeIndex = 0L;
-
-            while (nodeIndex < index)
-            {
-                node = node->Next;
-                nodeIndex++;
-            }
-
-            if (item != NULL)
-            {
-                memcpy(item, node->Item, list->ItemSize);
-            }
-
-            node->Previous->Next = node->Next;
-            node->Next->Previous = node->Previous;
-            free(node);
-            list->Length--;
-
-            removed = true;
-        }
-        else if (index == lastIndex)
-        {
-            removed = DoublyLinkedList_Pop(list, item);
-        }
+      removed = DoublyLinkedList_PopLeft(list, item);
     }
+    else if (index > 0L && index < lastIndex)
+    {
+      DoublyLinkedList_Node_t *node = list->Head;
+      DoublyLinkedList_Index_t nodeIndex = 0L;
 
-    return removed;
+      while (nodeIndex < index)
+      {
+        node = node->Next;
+        nodeIndex++;
+      }
+
+      if (item != NULL)
+      {
+        memcpy(item, node->Item, list->ItemSize);
+      }
+
+      node->Previous->Next = node->Next;
+      node->Next->Previous = node->Previous;
+      free(node);
+      list->Length--;
+
+      removed = true;
+    }
+    else if (index == lastIndex)
+    {
+      removed = DoublyLinkedList_Pop(list, item);
+    }
+  }
+
+  return removed;
 }

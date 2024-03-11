@@ -31,18 +31,18 @@ static inline void Queue_AdvanceItemOffset(const Queue_t *const queue, size_t *c
  ******************************************************************************/
 Queue_t *Queue_Init(const uint64_t length, const size_t itemSize)
 {
-    uint8_t *allocated = (uint8_t *)malloc(sizeof(Queue_t) + (length * itemSize));
-    Queue_t *queue = (Queue_t *)allocated;
-    uint8_t *buffer = (uint8_t *)(allocated + sizeof(Queue_t));
+  uint8_t *allocated = (uint8_t *)malloc(sizeof(Queue_t) + (length * itemSize));
+  Queue_t *queue = (Queue_t *)allocated;
+  uint8_t *buffer = (uint8_t *)(allocated + sizeof(Queue_t));
 
-    if (!Queue_InitStatic(queue, buffer, length, itemSize))
-    {
-        Queue_Free(queue);
+  if (!Queue_InitStatic(queue, buffer, length, itemSize))
+  {
+    Queue_Free(queue);
 
-        queue = NULL;
-    }
+    queue = NULL;
+  }
 
-    return queue;
+  return queue;
 }
 
 /**
@@ -62,20 +62,20 @@ Queue_t *Queue_Init(const uint64_t length, const size_t itemSize)
  ******************************************************************************/
 bool Queue_InitStatic(Queue_t *const queue, uint8_t *const buffer, const uint64_t length, const size_t itemSize)
 {
-    bool init = false;
+  bool init = false;
 
-    if (queue != NULL && buffer != NULL)
-    {
-        queue->Buffer = buffer;
-        queue->Length = length;
-        queue->ItemSize = itemSize;
-        queue->BufferSize = queue->Length * queue->ItemSize;
-        Queue_Reset(queue);
+  if (queue != NULL && buffer != NULL)
+  {
+    queue->Buffer = buffer;
+    queue->Length = length;
+    queue->ItemSize = itemSize;
+    queue->BufferSize = queue->Length * queue->ItemSize;
+    Queue_Reset(queue);
 
-        init = true;
-    }
+    init = true;
+  }
 
-    return init;
+  return init;
 }
 
 /**
@@ -85,10 +85,10 @@ bool Queue_InitStatic(Queue_t *const queue, uint8_t *const buffer, const uint64_
  ******************************************************************************/
 void Queue_Free(Queue_t *const queue)
 {
-    if (queue != NULL)
-    {
-        free((void *)queue);
-    }
+  if (queue != NULL)
+  {
+    free((void *)queue);
+  }
 }
 
 /**
@@ -104,21 +104,21 @@ void Queue_Free(Queue_t *const queue)
  ******************************************************************************/
 bool Queue_Push(Queue_t *const queue, const void *const item)
 {
-    bool pushed = false;
+  bool pushed = false;
 
-    if (queue != NULL && item != NULL)
+  if (queue != NULL && item != NULL)
+  {
+    if (queue->Items < queue->Length)
     {
-        if (queue->Items < queue->Length)
-        {
-            memcpy(queue->Buffer + queue->Tail, item, queue->ItemSize);
-            Queue_AdvanceItemOffset(queue, &queue->Tail);
-            queue->Items++;
+      memcpy(queue->Buffer + queue->Tail, item, queue->ItemSize);
+      Queue_AdvanceItemOffset(queue, &queue->Tail);
+      queue->Items++;
 
-            pushed = true;
-        }
+      pushed = true;
     }
+  }
 
-    return pushed;
+  return pushed;
 }
 
 /**
@@ -135,17 +135,17 @@ bool Queue_Push(Queue_t *const queue, const void *const item)
  ******************************************************************************/
 bool Queue_Pop(Queue_t *const queue, void *const item)
 {
-    bool popped = false;
+  bool popped = false;
 
-    if (Queue_Peek(queue, item))
-    {
-        Queue_AdvanceItemOffset(queue, &queue->Head);
-        queue->Items--;
+  if (Queue_Peek(queue, item))
+  {
+    Queue_AdvanceItemOffset(queue, &queue->Head);
+    queue->Items--;
 
-        popped = true;
-    }
+    popped = true;
+  }
 
-    return popped;
+  return popped;
 }
 
 /**
@@ -163,19 +163,19 @@ bool Queue_Pop(Queue_t *const queue, void *const item)
  ******************************************************************************/
 bool Queue_Peek(const Queue_t *const queue, void *const item)
 {
-    bool peeked = false;
+  bool peeked = false;
 
-    if (queue != NULL && item != NULL)
+  if (queue != NULL && item != NULL)
+  {
+    if (!Queue_IsEmpty(queue))
     {
-        if (!Queue_IsEmpty(queue))
-        {
-            memcpy(item, queue->Buffer + queue->Head, queue->ItemSize);
+      memcpy(item, queue->Buffer + queue->Head, queue->ItemSize);
 
-            peeked = true;
-        }
+      peeked = true;
     }
+  }
 
-    return peeked;
+  return peeked;
 }
 
 /**
@@ -185,18 +185,18 @@ bool Queue_Peek(const Queue_t *const queue, void *const item)
  ******************************************************************************/
 bool Queue_Reset(Queue_t *const queue)
 {
-    bool reset = false;
+  bool reset = false;
 
-    if (queue != NULL)
-    {
-        queue->Items = 0UL;
-        queue->Head = 0UL;
-        queue->Tail = 0UL;
+  if (queue != NULL)
+  {
+    queue->Items = 0UL;
+    queue->Head = 0UL;
+    queue->Tail = 0UL;
 
-        reset = true;
-    }
+    reset = true;
+  }
 
-    return reset;
+  return reset;
 }
 
 /**
@@ -211,14 +211,14 @@ bool Queue_Reset(Queue_t *const queue)
  ******************************************************************************/
 bool Queue_IsEmpty(const Queue_t *const queue)
 {
-    bool empty = true;
+  bool empty = true;
 
-    if (queue != NULL)
-    {
-        empty = (queue->Items == 0UL);
-    }
+  if (queue != NULL)
+  {
+    empty = (queue->Items == 0UL);
+  }
 
-    return empty;
+  return empty;
 }
 
 /**
@@ -231,8 +231,8 @@ bool Queue_IsEmpty(const Queue_t *const queue)
  ******************************************************************************/
 static inline void Queue_AdvanceItemOffset(const Queue_t *const queue, size_t *const itemOffset)
 {
-    if (queue != NULL && itemOffset != NULL)
-    {
-        *itemOffset = (*itemOffset + queue->ItemSize) % queue->BufferSize;
-    }
+  if (queue != NULL && itemOffset != NULL)
+  {
+    *itemOffset = (*itemOffset + queue->ItemSize) % queue->BufferSize;
+  }
 }
