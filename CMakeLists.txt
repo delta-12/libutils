@@ -17,10 +17,10 @@ target_link_libraries(test_DoublyLinkedList Unity)
 target_link_libraries(test_SinglyLinkedList Unity)
 target_link_libraries(test_Queue Unity)
 
-enable_testing()
-add_test(test_DoublyLinkedList test_DoublyLinkedList)
-add_test(test_SinglyLinkedList test_SinglyLinkedList)
-add_test(test_Queue test_Queue)
-
 include(cppcheck.cmake)
 include(doxygen.cmake)
+include(tests.cmake)
+
+add_test_with_valgrind(test_DoublyLinkedList)
+add_test_with_valgrind(test_SinglyLinkedList)
+add_test_with_valgrind(test_Queue)

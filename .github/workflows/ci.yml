@@ -29,7 +29,7 @@ jobs:
         with:
           name: cppcheck-report
           path: libutils/build/cppcheck_report.xml
-  unit-tests-and-valgrind:
+  unit-tests:
     runs-on: ubuntu-latest
     container:
       image: d3lta12/c-utils-tools:latest
@@ -52,45 +52,26 @@ jobs:
       - name: Build tests
         working-directory: ./build
         run: cmake --build . -j$(nproc)
-      - name: Test DoublyLinkedList
-        working-directory: ./build/LinkedList
-        run: valgrind --leak-check=full --error-exitcode=2 --xml=yes --xml-file=test_DoublyLinkedList-valgrind-report.xml -s ./test_DoublyLinkedList > test_DoublyLinkedList-unit_tests-report.txt
-      - name: Upload DoublyLinkedList unit test report
+      - name: Execute tests
+        run: ctest --test-dir build --verbose
+      - name: Upload unit tests log
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
         with:
-          name: test_DoublyLinkedList-unit_tests-report
-          path: libutils/build/test_DoublyLinkedList-unit_tests-report.txt
+          name: unit-tests-log
+          path: libutils/build/Testing/Temporary/LastTest.log
       - name: Upload DoublyLinkedList valgrind report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
         with:
           name: test_DoublyLinkedList-valgrind-report
           path: libutils/build/test_DoublyLinkedList-valgrind-report.xml
-      - name: Test SinglyLinkedList
-        working-directory: ./build/LinkedList
-        run: valgrind --leak-check=full --error-exitcode=2 --xml=yes --xml-file=test_SinglyLinkedList-valgrind-report.xml -s ./test_SinglyLinkedList > test_SinglyLinkedList-unit_tests-report.txt
-      - name: Upload SinglyLinkedList unit test report
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: test_SinglyLinkedList-unit_tests-report
-          path: libutils/build/test_SinglyLinkedList-unit_tests-report.txt
       - name: Upload SinglyLinkedList valgrind report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
         with:
           name: test_SinglyLinkedList-valgrind-report
           path: libutils/build/test_SinglyLinkedList-valgrind-report.xml
-      - name: Test Queue
-        working-directory: ./build/Queue
-        run: valgrind --leak-check=full --error-exitcode=2 --xml=yes --xml-file=test_Queue-valgrind-report.xml -s ./test_Queue > test_Queue-unit_tests-report.txt
-      - name: Upload Queue unit test report
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: test_Queue-unit_tests-report
-          path: libutils/build/test_Queue-unit_tests-report.txt
       - name: Upload Queue valgrind report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
