@@ -21,13 +21,13 @@
 /* Definition of a queue */
 typedef struct
 {
-    uint8_t *Buffer;   /* Pointer to a buffer large enough to store the maximum number of items the queue can hold */
-    uint64_t Length;   /* Maximum number of items the queue can hold */
-    size_t ItemSize;   /* Size of each item in the queue */
-    size_t BufferSize; /* Size of the buffer holding items in the queue */
-    size_t Head;       /* Offset from the start of the buffer to the first item in the queue */
-    size_t Tail;       /* Offset from the start of the buffer to the last item in the queue */
-    uint64_t Items;    /* Number of items currently in the queue */
+  uint8_t *Buffer;     /* Pointer to a buffer large enough to store the maximum number of items the queue can hold */
+  uint64_t Length;     /* Maximum number of items the queue can hold */
+  size_t ItemSize;     /* Size of each item in the queue */
+  size_t BufferSize;   /* Size of the buffer holding items in the queue */
+  size_t Head;         /* Offset from the start of the buffer to the first item in the queue */
+  size_t Tail;         /* Offset from the start of the buffer to the last item in the queue */
+  uint64_t Items;      /* Number of items currently in the queue */
 } Queue_t;
 
 /* Function Prototypes

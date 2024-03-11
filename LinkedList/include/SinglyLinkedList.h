@@ -32,16 +32,16 @@ typedef struct SinglyLinkedList_Node SinglyLinkedList_Node_t; /* Node in a singl
 /* Definition of a node in a singly linked list */
 struct SinglyLinkedList_Node
 {
-    SinglyLinkedList_Node_t *Next; /* Pointer to the next node in the list */
-    uint8_t *Item;                 /* Pointer to the buffer storing the node's item */
+  SinglyLinkedList_Node_t *Next;   /* Pointer to the next node in the list */
+  uint8_t *Item;                   /* Pointer to the buffer storing the node's item */
 };
 
 /* Definition of a singly linked list */
 typedef struct
 {
-    SinglyLinkedList_Node_t *Head;    /* Pointer to the node at the head of the list */
-    SinglyLinkedList_Length_t Length; /* Length of the list */
-    size_t ItemSize;                  /* Size of each node's item in the list */
+  SinglyLinkedList_Node_t *Head;      /* Pointer to the node at the head of the list */
+  SinglyLinkedList_Length_t Length;   /* Length of the list */
+  size_t ItemSize;                    /* Size of each node's item in the list */
 } SinglyLinkedList_t;
 
 /* Function Prototypes

@@ -32,18 +32,18 @@ typedef struct DoublyLinkedList_Node DoublyLinkedList_Node_t; /* Node in a singl
 /* Definition of a node in a singly linked list */
 struct DoublyLinkedList_Node
 {
-    DoublyLinkedList_Node_t *Next;     /* Pointer to the next node in the list */
-    DoublyLinkedList_Node_t *Previous; /* Pointer to the previous node in the list */
-    uint8_t *Item;                     /* Pointer to the buffer storing the node's item */
+  DoublyLinkedList_Node_t *Next;       /* Pointer to the next node in the list */
+  DoublyLinkedList_Node_t *Previous;   /* Pointer to the previous node in the list */
+  uint8_t *Item;                       /* Pointer to the buffer storing the node's item */
 };
 
 /* Definition of a singly linked list */
 typedef struct
 {
-    DoublyLinkedList_Node_t *Head;    /* Pointer to the node at the head of the list */
-    DoublyLinkedList_Node_t *Tail;    /* Pointer to the node at the tail of the list */
-    DoublyLinkedList_Length_t Length; /* Length of the list */
-    size_t ItemSize;                  /* Size of each node's item in the list */
+  DoublyLinkedList_Node_t *Head;      /* Pointer to the node at the head of the list */
+  DoublyLinkedList_Node_t *Tail;      /* Pointer to the node at the tail of the list */
+  DoublyLinkedList_Length_t Length;   /* Length of the list */
+  size_t ItemSize;                    /* Size of each node's item in the list */
 } DoublyLinkedList_t;
 
 /* Function Prototypes

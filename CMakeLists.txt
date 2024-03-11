@@ -10,16 +10,29 @@ include_directories(${UNITY_PATH})
 add_library(Unity ${UNITY_SOURCES})
 target_compile_definitions(Unity PUBLIC UNITY_INCLUDE_DOUBLE)
 
-add_subdirectory(LinkedList)
-add_subdirectory(Queue)
+set(SOURCE_DIRS
+    ${CMAKE_SOURCE_DIR}/LinkedList
+    ${CMAKE_SOURCE_DIR}/Queue
+)
+set(SOURCE_LIST)
+foreach(SOURCE_DIR ${SOURCE_DIRS})
+    add_subdirectory(${SOURCE_DIR})
+    file(GLOB_RECURSE RECURSE_SOURCES ${SOURCE_DIR}/*.c ${SOURCE_DIR}/*.h)
+    list(APPEND SOURCE_LIST ${RECURSE_SOURCES})
+endforeach()
 
 target_link_libraries(test_DoublyLinkedList Unity)
 target_link_libraries(test_SinglyLinkedList Unity)
 target_link_libraries(test_Queue Unity)
 
+add_dependencies(test_DoublyLinkedList uncrustify)
+add_dependencies(test_SinglyLinkedList uncrustify)
+add_dependencies(test_Queue uncrustify)
+
 include(cppcheck.cmake)
 include(doxygen.cmake)
 include(tests.cmake)
+include(uncrustify.cmake)
 
 add_test_with_valgrind(test_DoublyLinkedList)
 add_test_with_valgrind(test_SinglyLinkedList)

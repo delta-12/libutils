@@ -27,18 +27,18 @@
  ******************************************************************************/
 bool SinglyLinkedList_Init(SinglyLinkedList_t *const list, const size_t itemSize)
 {
-    bool init = false;
+  bool init = false;
 
-    if (list != NULL)
-    {
-        list->Head = NULL;
-        list->Length = 0L;
-        list->ItemSize = itemSize;
+  if (list != NULL)
+  {
+    list->Head = NULL;
+    list->Length = 0L;
+    list->ItemSize = itemSize;
 
-        init = true;
-    }
+    init = true;
+  }
 
-    return init;
+  return init;
 }
 
 /**
@@ -51,7 +51,7 @@ bool SinglyLinkedList_Init(SinglyLinkedList_t *const list, const size_t itemSize
  ******************************************************************************/
 bool SinglyLinkedList_Free(SinglyLinkedList_t *const list)
 {
-    return SinglyLinkedList_Reset(list);
+  return SinglyLinkedList_Reset(list);
 }
 
 /**
@@ -68,38 +68,38 @@ bool SinglyLinkedList_Free(SinglyLinkedList_t *const list)
  ******************************************************************************/
 bool SinglyLinkedList_Append(SinglyLinkedList_t *const list, const void *const item)
 {
-    bool appended = false;
+  bool appended = false;
 
-    if (list != NULL && item != NULL)
+  if (list != NULL && item != NULL)
+  {
+    SinglyLinkedList_Node_t *newNode = (SinglyLinkedList_Node_t *)malloc(sizeof(SinglyLinkedList_Node_t) + list->ItemSize);
+
+    newNode->Next = NULL;
+    newNode->Item = (uint8_t *)newNode + sizeof(SinglyLinkedList_Node_t);
+    memcpy(newNode->Item, item, list->ItemSize);
+
+    if (list->Head == NULL)
     {
-        SinglyLinkedList_Node_t *newNode = (SinglyLinkedList_Node_t *)malloc(sizeof(SinglyLinkedList_Node_t) + list->ItemSize);
+      list->Head = newNode;
+    }
+    else
+    {
+      SinglyLinkedList_Node_t *node = list->Head;
 
-        newNode->Next = NULL;
-        newNode->Item = (uint8_t *)newNode + sizeof(SinglyLinkedList_Node_t);
-        memcpy(newNode->Item, item, list->ItemSize);
+      while (node->Next != NULL)
+      {
+        node = node->Next;
+      }
 
-        if (list->Head == NULL)
-        {
-            list->Head = newNode;
-        }
-        else
-        {
-            SinglyLinkedList_Node_t *node = list->Head;
-
-            while (node->Next != NULL)
-            {
-                node = node->Next;
-            }
-
-            node->Next = newNode;
-        }
-
-        list->Length++;
-
-        appended = true;
+      node->Next = newNode;
     }
 
-    return appended;
+    list->Length++;
+
+    appended = true;
+  }
+
+  return appended;
 }
 
 /**
@@ -117,22 +117,22 @@ bool SinglyLinkedList_Append(SinglyLinkedList_t *const list, const void *const i
  ******************************************************************************/
 bool SinglyLinkedList_AppendLeft(SinglyLinkedList_t *const list, const void *const item)
 {
-    bool appended = false;
+  bool appended = false;
 
-    if (list != NULL && item != NULL)
-    {
-        SinglyLinkedList_Node_t *newNode = (SinglyLinkedList_Node_t *)malloc(sizeof(SinglyLinkedList_Node_t) + list->ItemSize);
+  if (list != NULL && item != NULL)
+  {
+    SinglyLinkedList_Node_t *newNode = (SinglyLinkedList_Node_t *)malloc(sizeof(SinglyLinkedList_Node_t) + list->ItemSize);
 
-        newNode->Next = list->Head;
-        newNode->Item = (uint8_t *)newNode + sizeof(SinglyLinkedList_Node_t);
-        memcpy(newNode->Item, item, list->ItemSize);
-        list->Head = newNode;
-        list->Length++;
+    newNode->Next = list->Head;
+    newNode->Item = (uint8_t *)newNode + sizeof(SinglyLinkedList_Node_t);
+    memcpy(newNode->Item, item, list->ItemSize);
+    list->Head = newNode;
+    list->Length++;
 
-        appended = true;
-    }
+    appended = true;
+  }
 
-    return appended;
+  return appended;
 }
 
 /**
@@ -149,41 +149,41 @@ bool SinglyLinkedList_AppendLeft(SinglyLinkedList_t *const list, const void *con
  ******************************************************************************/
 bool SinglyLinkedList_Pop(SinglyLinkedList_t *const list, void *const item)
 {
-    bool popped = false;
+  bool popped = false;
 
-    if (list != NULL && list->Head != NULL)
+  if (list != NULL && list->Head != NULL)
+  {
+
+    SinglyLinkedList_Node_t *node = list->Head;
+    SinglyLinkedList_Node_t *previousNode = list->Head;
+
+    while (node->Next != NULL)
     {
-
-        SinglyLinkedList_Node_t *node = list->Head;
-        SinglyLinkedList_Node_t *previousNode = list->Head;
-
-        while (node->Next != NULL)
-        {
-            previousNode = node;
-            node = node->Next;
-        }
-
-        if (node == list->Head)
-        {
-            list->Head = NULL;
-        }
-        else
-        {
-            previousNode->Next = NULL;
-        }
-
-        if (item != NULL)
-        {
-            memcpy(item, node->Item, list->ItemSize);
-        }
-
-        free(node);
-        list->Length--;
-
-        popped = true;
+      previousNode = node;
+      node = node->Next;
     }
 
-    return popped;
+    if (node == list->Head)
+    {
+      list->Head = NULL;
+    }
+    else
+    {
+      previousNode->Next = NULL;
+    }
+
+    if (item != NULL)
+    {
+      memcpy(item, node->Item, list->ItemSize);
+    }
+
+    free(node);
+    list->Length--;
+
+    popped = true;
+  }
+
+  return popped;
 }
 
 /**
@@ -201,26 +201,26 @@ bool SinglyLinkedList_Pop(SinglyLinkedList_t *const list, void *const item)
  ******************************************************************************/
 bool SinglyLinkedList_PopLeft(SinglyLinkedList_t *const list, void *const item)
 {
-    bool popped = false;
+  bool popped = false;
 
-    if (list != NULL && list->Head != NULL)
+  if (list != NULL && list->Head != NULL)
+  {
+
+    SinglyLinkedList_Node_t *head = list->Head;
+
+    if (item != NULL)
     {
-
-        SinglyLinkedList_Node_t *head = list->Head;
-
-        if (item != NULL)
-        {
-            memcpy(item, head->Item, list->ItemSize);
-        }
-
-        list->Head = head->Next;
-        free(head);
-        list->Length--;
-
-        popped = true;
+      memcpy(item, head->Item, list->ItemSize);
     }
 
-    return popped;
+    list->Head = head->Next;
+    free(head);
+    list->Length--;
+
+    popped = true;
+  }
+
+  return popped;
 }
 
 /**
@@ -230,27 +230,27 @@ bool SinglyLinkedList_PopLeft(SinglyLinkedList_t *const list, void *const item)
  ******************************************************************************/
 bool SinglyLinkedList_Reset(SinglyLinkedList_t *const list)
 {
-    bool reset = false;
+  bool reset = false;
 
-    if (list != NULL)
+  if (list != NULL)
+  {
+    SinglyLinkedList_Node_t *node = list->Head;
+    SinglyLinkedList_Node_t *nextNode;
+
+    while (node != NULL)
     {
-        SinglyLinkedList_Node_t *node = list->Head;
-        SinglyLinkedList_Node_t *nextNode;
-
-        while (node != NULL)
-        {
-            nextNode = node->Next;
-            free(node);
-            node = nextNode;
-        }
-
-        list->Head = NULL;
-        list->Length = 0L;
-
-        reset = true;
+      nextNode = node->Next;
+      free(node);
+      node = nextNode;
     }
 
-    return reset;
+    list->Head = NULL;
+    list->Length = 0L;
+
+    reset = true;
+  }
+
+  return reset;
 }
 
 /**
@@ -265,26 +265,26 @@ bool SinglyLinkedList_Reset(SinglyLinkedList_t *const list)
  ******************************************************************************/
 SinglyLinkedList_Index_t SinglyLinkedList_GetIndex(const SinglyLinkedList_t *const list, const void *const item)
 {
-    SinglyLinkedList_Index_t index = SINGLY_LINKED_LIST_INDEX_ERROR;
+  SinglyLinkedList_Index_t index = SINGLY_LINKED_LIST_INDEX_ERROR;
 
-    if (list != NULL && item != NULL)
+  if (list != NULL && item != NULL)
+  {
+    const SinglyLinkedList_Node_t *node = list->Head;
+    SinglyLinkedList_Index_t nodeIndex = 0L;
+
+    while (index == SINGLY_LINKED_LIST_INDEX_ERROR && node != NULL)
     {
-        const SinglyLinkedList_Node_t *node = list->Head;
-        SinglyLinkedList_Index_t nodeIndex = 0L;
+      if (memcmp(node->Item, item, list->ItemSize) == 0L)
+      {
+        index = nodeIndex;
+      }
 
-        while (index == SINGLY_LINKED_LIST_INDEX_ERROR && node != NULL)
-        {
-            if (memcmp(node->Item, item, list->ItemSize) == 0L)
-            {
-                index = nodeIndex;
-            }
-
-            node = node->Next;
-            nodeIndex++;
-        }
+      node = node->Next;
+      nodeIndex++;
     }
+  }
 
-    return index;
+  return index;
 }
 
 /**
@@ -299,14 +299,14 @@ SinglyLinkedList_Index_t SinglyLinkedList_GetIndex(const SinglyLinkedList_t *con
  ******************************************************************************/
 SinglyLinkedList_Length_t SinglyLinkedList_GetLength(const SinglyLinkedList_t *const list)
 {
-    SinglyLinkedList_Length_t length = SINGLY_LINKED_LIST_LENGTH_ERROR;
+  SinglyLinkedList_Length_t length = SINGLY_LINKED_LIST_LENGTH_ERROR;
 
-    if (list != NULL)
-    {
-        length = list->Length;
-    }
+  if (list != NULL)
+  {
+    length = list->Length;
+  }
 
-    return length;
+  return length;
 }
 
 /**
@@ -327,43 +327,43 @@ SinglyLinkedList_Length_t SinglyLinkedList_GetLength(const SinglyLinkedList_t *c
  ******************************************************************************/
 bool SinglyLinkedList_Insert(SinglyLinkedList_t *const list, const SinglyLinkedList_Index_t index, const void *const item)
 {
-    bool inserted = false;
+  bool inserted = false;
 
-    if (list != NULL && item != NULL)
+  if (list != NULL && item != NULL)
+  {
+    if (index == 0L)
     {
-        if (index == 0L)
-        {
-            inserted = SinglyLinkedList_AppendLeft(list, item);
-        }
-        else if (index > 0L && index < list->Length)
-        {
-            SinglyLinkedList_Node_t *newNode = (SinglyLinkedList_Node_t *)malloc(sizeof(SinglyLinkedList_Node_t) + list->ItemSize);
-            SinglyLinkedList_Node_t *node = list->Head;
-            SinglyLinkedList_Node_t *previousNode = list->Head;
-            SinglyLinkedList_Index_t nodeIndex = 0L;
-
-            while (nodeIndex < index)
-            {
-                previousNode = node;
-                node = node->Next;
-                nodeIndex++;
-            }
-
-            previousNode->Next = newNode;
-            newNode->Next = node;
-            newNode->Item = (uint8_t *)newNode + sizeof(SinglyLinkedList_Node_t);
-            memcpy(newNode->Item, item, list->ItemSize);
-            list->Length++;
-
-            inserted = true;
-        }
-        else if (index >= list->Length)
-        {
-            inserted = SinglyLinkedList_Append(list, item);
-        }
+      inserted = SinglyLinkedList_AppendLeft(list, item);
     }
+    else if (index > 0L && index < list->Length)
+    {
+      SinglyLinkedList_Node_t *newNode = (SinglyLinkedList_Node_t *)malloc(sizeof(SinglyLinkedList_Node_t) + list->ItemSize);
+      SinglyLinkedList_Node_t *node = list->Head;
+      SinglyLinkedList_Node_t *previousNode = list->Head;
+      SinglyLinkedList_Index_t nodeIndex = 0L;
 
-    return inserted;
+      while (nodeIndex < index)
+      {
+        previousNode = node;
+        node = node->Next;
+        nodeIndex++;
+      }
+
+      previousNode->Next = newNode;
+      newNode->Next = node;
+      newNode->Item = (uint8_t *)newNode + sizeof(SinglyLinkedList_Node_t);
+      memcpy(newNode->Item, item, list->ItemSize);
+      list->Length++;
+
+      inserted = true;
+    }
+    else if (index >= list->Length)
+    {
+      inserted = SinglyLinkedList_Append(list, item);
+    }
+  }
+
+  return inserted;
 }
 
 /**
@@ -382,43 +382,43 @@ bool SinglyLinkedList_Insert(SinglyLinkedList_t *const list, const SinglyLinkedL
  ******************************************************************************/
 bool SinglyLinkedList_Remove(SinglyLinkedList_t *const list, const SinglyLinkedList_Index_t index, void *const item)
 {
-    bool removed = false;
+  bool removed = false;
 
-    if (list != NULL && list->Head != NULL)
+  if (list != NULL && list->Head != NULL)
+  {
+    if (index >= 0L && index < list->Length)
     {
-        if (index >= 0L && index < list->Length)
-        {
-            SinglyLinkedList_Node_t *node = list->Head;
-            SinglyLinkedList_Node_t *previousNode = list->Head;
-            SinglyLinkedList_Index_t nodeIndex = 0L;
+      SinglyLinkedList_Node_t *node = list->Head;
+      SinglyLinkedList_Node_t *previousNode = list->Head;
+      SinglyLinkedList_Index_t nodeIndex = 0L;
 
-            while (nodeIndex < index)
-            {
-                previousNode = node;
-                node = node->Next;
-                nodeIndex++;
-            }
+      while (nodeIndex < index)
+      {
+        previousNode = node;
+        node = node->Next;
+        nodeIndex++;
+      }
 
-            if (node == list->Head)
-            {
-                list->Head = node->Next;
-            }
-            else
-            {
-                previousNode->Next = node->Next;
-            }
+      if (node == list->Head)
+      {
+        list->Head = node->Next;
+      }
+      else
+      {
+        previousNode->Next = node->Next;
+      }
 
-            if (item != NULL)
-            {
-                memcpy(item, node->Item, list->ItemSize);
-            }
+      if (item != NULL)
+      {
+        memcpy(item, node->Item, list->ItemSize);
+      }
 
-            free(node);
-            list->Length--;
+      free(node);
+      list->Length--;
 
-            removed = true;
-        }
+      removed = true;
     }
+  }
 
-    return removed;
+  return removed;
 }

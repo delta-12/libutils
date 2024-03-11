@@ -39,6 +39,15 @@ RUN cmake -G "Unix Makefiles" ..
 RUN make -j$(nproc)
 RUN make install
 
+# Install Uncrustify
+WORKDIR /opt
+RUN git clone https://github.com/uncrustify/uncrustify.git
+RUN mkdir /opt/uncrustify/build
+WORKDIR /opt/uncrustify/build
+RUN cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
+RUN cmake --build . --config Release -j$(nproc)
+RUN cmake --build . --target install
+
 # Install Valgrind
 ENV VALGRIND_VERSION 3.22
 ENV VALGRIND_BUILD 0

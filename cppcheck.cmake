@@ -14,17 +14,14 @@ else()
     message(FATAL_ERROR "${CPPCHECK_NAME} not found.")
 endif()
 
-message(STATUS "Adding files to cppcheck")
-set(CPPCHECK_SOURCES
-    ${CMAKE_SOURCE_DIR}/LinkedList
-    ${CMAKE_SOURCE_DIR}/Queue
-)
+message(STATUS "Adding files to Cppcheck")
+set(CPPCHECK_SOURCES ${SOURCE_DIRS})
 
 add_custom_target(
         cppcheck
         ${${CPPCHECK_NAME}_BIN}
         --enable=all
-        --suppress-xml=../suppressions.xml
+        --suppress-xml=${CMAKE_SOURCE_DIR}/suppressions.xml
         --error-exitcode=2
         --xml
         --output-file=cppcheck_report.xml

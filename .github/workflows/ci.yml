@@ -21,14 +21,13 @@ jobs:
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: cmake -B build -G Ninja
       - name: Cppcheck
-        working-directory: ./build
-        run: cmake --build . --target cppcheck
+        run: cmake --build build --target cppcheck
       - name: Upload Cppcheck Report
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cppcheck-report
-          path: libutils/build/cppcheck_report.xml
+          path: build/cppcheck_report.xml
   unit-tests:
     runs-on: ubuntu-latest
     container:
@@ -50,31 +49,58 @@ jobs:
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: cmake -B build -G Ninja
       - name: Build tests
-        working-directory: ./build
-        run: cmake --build . -j$(nproc)
+        run: cmake --build build -j$(nproc)
       - name: Execute tests
         run: ctest --test-dir build --verbose
       - name: Upload unit tests log
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: unit-tests-log
-          path: libutils/build/Testing/Temporary/LastTest.log
+          path: build/Testing/Temporary/LastTest.log
       - name: Upload DoublyLinkedList valgrind report
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test_DoublyLinkedList-valgrind-report
-          path: libutils/build/test_DoublyLinkedList-valgrind-report.xml
+          path: build/test_DoublyLinkedList-valgrind-report.xml
       - name: Upload SinglyLinkedList valgrind report
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test_SinglyLinkedList-valgrind-report
-          path: libutils/build/test_SinglyLinkedList-valgrind-report.xml
+          path: build/test_SinglyLinkedList-valgrind-report.xml
       - name: Upload Queue valgrind report
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test_Queue-valgrind-report
-          path: libutils/build/test_Queue-valgrind-report.xml
+          path: build/test_Queue-valgrind-report.xml
+  uncrustify:
+    runs-on: ubuntu-latest
+    container:
+      image: d3lta12/c-utils-tools:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+      - name: Cache CMake files
+        id: cache-cmake
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-cmake
+        with:
+          path: ./build
+          key: ${{ env.cache-name }}-${{ hashFiles('**/CMakeLists.txt', '**.cmake') }}
+      - name: Generate CMake cache
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        run: cmake -B build -G Ninja
+      - name: Crust check
+        run: cmake --build build --target uncrustify-check
+      - name: Upload Uncrustify Report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uncrustify-report
+          path: build/uncrustify-report.txt
