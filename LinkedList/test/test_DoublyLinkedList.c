@@ -1,7 +1,7 @@
 #include "unity.h"
 #include "DoublyLinkedList.h"
 
-#define TEST_DOUBLYLINKEDLIST_ITEM uint64_t
+#define TEST_DOUBLYLINKEDLIST_ITEM      uint64_t
 #define TEST_DOUBLYLINKEDLIST_ITEM_SIZE sizeof(TEST_DOUBLYLINKEDLIST_ITEM)
 
 typedef TEST_DOUBLYLINKEDLIST_ITEM test_DoublyLinkedList_Item_t;

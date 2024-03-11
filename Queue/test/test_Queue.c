@@ -1,8 +1,8 @@
 #include "unity.h"
 #include "Queue.h"
 
-#define TEST_QUEUE_ITEM uint8_t
-#define TEST_QUEUE_LENGTH 10UL
+#define TEST_QUEUE_ITEM      uint8_t
+#define TEST_QUEUE_LENGTH    10UL
 #define TEST_QUEUE_ITEM_SIZE sizeof(TEST_QUEUE_ITEM)
 
 typedef TEST_QUEUE_ITEM test_Queue_Item_t;

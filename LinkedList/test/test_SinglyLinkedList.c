@@ -1,7 +1,7 @@
 #include "unity.h"
 #include "SinglyLinkedList.h"
 
-#define TEST_SINGLYLINKEDLIST_ITEM uint64_t
+#define TEST_SINGLYLINKEDLIST_ITEM      uint64_t
 #define TEST_SINGLYLINKEDLIST_ITEM_SIZE sizeof(TEST_SINGLYLINKEDLIST_ITEM)
 
 typedef TEST_SINGLYLINKEDLIST_ITEM test_SinglyLinkedList_Item_t;
