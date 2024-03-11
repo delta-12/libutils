@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Update image and install tools, dependencies
 RUN apt update && apt upgrade -y && apt autoremove -y
-RUN apt install -y python3 python3-pip build-essential libssl-dev gdb git wget
+RUN apt install -y python3 python3-pip build-essential ninja-build libssl-dev gdb git wget
 
 # Install CMake
 ENV CMAKE_VERSION 3.28
@@ -25,7 +25,7 @@ WORKDIR /opt
 RUN git clone https://github.com/danmar/cppcheck.git
 RUN mkdir /opt/cppcheck/build
 WORKDIR /opt/cppcheck/build
-RUN cmake ..
+RUN cmake .. -G Ninja
 RUN cmake --build . -j$(nproc)
 ENV PATH="${PATH}:/opt/cppcheck/build/bin/"
 

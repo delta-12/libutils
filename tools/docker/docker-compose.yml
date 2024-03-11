@@ -6,4 +6,4 @@ services:
     volumes:
       - ../../:/libutils
     working_dir: /libutils/docker-build
-    command: cmake ..
+    command: cmake .. -G Ninja
