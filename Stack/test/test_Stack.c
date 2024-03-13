@@ -38,6 +38,10 @@ void test_Stack_InitStatic(void)
   Stack_t stack;
   test_Stack_Item_t item;
 
+  TEST_ASSERT_FALSE(Stack_InitStatic(NULL, test_StackStaticBuffer, TEST_STACK_LENGTH, TEST_STACK_ITEM_SIZE));
+  TEST_ASSERT_FALSE(Stack_InitStatic(&stack, NULL, TEST_STACK_LENGTH, TEST_STACK_ITEM_SIZE));
+  TEST_ASSERT_FALSE(Stack_InitStatic(NULL, NULL, TEST_STACK_LENGTH, TEST_STACK_ITEM_SIZE));
+
   TEST_ASSERT_TRUE(Stack_InitStatic(&stack, test_StackStaticBuffer, TEST_STACK_LENGTH, TEST_STACK_ITEM_SIZE));
   TEST_ASSERT_TRUE(Stack_IsEmpty(&stack));
   TEST_ASSERT_FALSE(Stack_Pop(&stack, &item));
@@ -49,6 +53,16 @@ void test_Stack_PushPopPeekIsEmpty(void)
   test_Stack_Item_t item;
 
   Stack_Reset(test_Stack);
+  TEST_ASSERT_FALSE(Stack_Push(test_Stack, NULL));
+  TEST_ASSERT_FALSE(Stack_Push(NULL, &item));
+  TEST_ASSERT_FALSE(Stack_Push(NULL, NULL));
+  TEST_ASSERT_FALSE(Stack_Pop(test_Stack, NULL));
+  TEST_ASSERT_FALSE(Stack_Pop(NULL, &item));
+  TEST_ASSERT_FALSE(Stack_Pop(NULL, NULL));
+  TEST_ASSERT_FALSE(Stack_Peek(test_Stack, NULL));
+  TEST_ASSERT_FALSE(Stack_Peek(NULL, &item));
+  TEST_ASSERT_FALSE(Stack_Peek(NULL, NULL));
+  TEST_ASSERT_TRUE(Stack_IsEmpty(NULL));
 
   item = 0U;
   TEST_ASSERT_TRUE(Stack_Push(test_Stack, &item));
@@ -111,6 +125,8 @@ void test_Stack_PushPopPeekIsEmpty(void)
 void test_Stack_Reset(void)
 {
   test_Stack_Item_t item;
+
+  TEST_ASSERT_FALSE(Stack_Reset(NULL));
 
   TEST_ASSERT_TRUE(Stack_Reset(test_Stack));
   TEST_ASSERT_TRUE(Stack_IsEmpty(test_Stack));
