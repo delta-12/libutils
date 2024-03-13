@@ -76,6 +76,12 @@ jobs:
         with:
           name: test_Queue-valgrind-report
           path: build/test_Queue-valgrind-report.xml
+      - name: Upload Stack valgrind report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test_Stack-valgrind-report
+          path: build/test_Stack-valgrind-report.xml
   uncrustify:
     runs-on: ubuntu-latest
     container:
