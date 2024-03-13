@@ -13,6 +13,7 @@ target_compile_definitions(Unity PUBLIC UNITY_INCLUDE_DOUBLE)
 set(SOURCE_DIRS
     ${CMAKE_SOURCE_DIR}/LinkedList
     ${CMAKE_SOURCE_DIR}/Queue
+    ${CMAKE_SOURCE_DIR}/Stack
 )
 set(SOURCE_LIST)
 foreach(SOURCE_DIR ${SOURCE_DIRS})
@@ -24,10 +25,12 @@ endforeach()
 target_link_libraries(test_DoublyLinkedList Unity)
 target_link_libraries(test_SinglyLinkedList Unity)
 target_link_libraries(test_Queue Unity)
+target_link_libraries(test_Stack Unity)
 
 add_dependencies(test_DoublyLinkedList uncrustify)
 add_dependencies(test_SinglyLinkedList uncrustify)
 add_dependencies(test_Queue uncrustify)
+add_dependencies(test_Stack uncrustify)
 
 include(cppcheck.cmake)
 include(doxygen.cmake)
@@ -37,3 +40,4 @@ include(uncrustify.cmake)
 add_test_with_valgrind(test_DoublyLinkedList)
 add_test_with_valgrind(test_SinglyLinkedList)
 add_test_with_valgrind(test_Queue)
+add_test_with_valgrind(test_Stack)
