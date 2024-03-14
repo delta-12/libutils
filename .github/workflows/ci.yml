@@ -63,25 +63,25 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test_DoublyLinkedList-valgrind-report
-          path: build/test_DoublyLinkedList-valgrind-report.xml
+          path: build/LinkedList/test_DoublyLinkedList-valgrind-report.xml
       - name: Upload SinglyLinkedList valgrind report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: test_SinglyLinkedList-valgrind-report
-          path: build/test_SinglyLinkedList-valgrind-report.xml
+          path: build/LinkedList/test_SinglyLinkedList-valgrind-report.xml
       - name: Upload Queue valgrind report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: test_Queue-valgrind-report
-          path: build/test_Queue-valgrind-report.xml
+          path: build/Queue/test_Queue-valgrind-report.xml
       - name: Upload Stack valgrind report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: test_Stack-valgrind-report
-          path: build/test_Stack-valgrind-report.xml
+          path: build/Stack/test_Stack-valgrind-report.xml
   uncrustify:
     runs-on: ubuntu-latest
     container:

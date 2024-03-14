@@ -11,7 +11,7 @@ function(add_test_with_valgrind name)
       --show-error-list=yes
       --error-exitcode=2
       --xml=yes
-      --xml-file=${name}-valgrind-report.xml
+      --xml-file=$<TARGET_FILE:${name}>-valgrind-report.xml
       $<TARGET_FILE:${name}>
 )
 endfunction()
