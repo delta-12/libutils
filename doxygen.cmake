@@ -12,5 +12,6 @@ endif()
 add_custom_target(
         doxygen
         ${${DOXYGEN_NAME}_BIN}
-        ../Doxyfile
+        ${CMAKE_SOURCE_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
