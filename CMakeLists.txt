@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.27)
 project(libutils LANGUAGES C VERSION 0.0.0)
 
 set(CMAKE_C_COMPILER "gcc")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -fdiagnostics-color=always")
 
 set(UNITY_PATH ${CMAKE_SOURCE_DIR}/Unity/src)
 set(UNITY_SOURCES ${UNITY_PATH}/unity.c)
