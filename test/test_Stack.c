@@ -134,6 +134,36 @@ void test_Stack_Reset(void)
   TEST_ASSERT_FALSE(Stack_Peek(test_Stack, &item));
 }
 
+void test_Stack_IsFull(void)
+{
+  test_Stack_Item_t item = 0U;
+
+  Stack_Reset(test_Stack);
+
+  for (test_Stack_Item_t i = 0U; i < TEST_STACK_LENGTH; i++)
+  {
+    TEST_ASSERT_FALSE(Stack_IsFull(test_Stack));
+    Stack_Push(test_Stack, &i);
+  }
+  TEST_ASSERT_TRUE(Stack_IsFull(test_Stack));
+
+  Stack_Pop(test_Stack, &item);
+  TEST_ASSERT_FALSE(Stack_IsFull(test_Stack));
+  Stack_Push(test_Stack, &item);
+  TEST_ASSERT_TRUE(Stack_IsFull(test_Stack));
+
+  Stack_Reset(test_Stack);
+  for (test_Stack_Item_t i = 0U; i < TEST_STACK_LENGTH; i++)
+  {
+    TEST_ASSERT_FALSE(Stack_IsFull(test_Stack));
+    Stack_Push(test_Stack, &i);
+  }
+  TEST_ASSERT_TRUE(Stack_IsFull(test_Stack));
+
+  Stack_Reset(test_Stack);
+  TEST_ASSERT_FALSE(Stack_IsFull(test_Stack));
+}
+
 int main(void)
 {
   UNITY_BEGIN();
@@ -142,6 +172,7 @@ int main(void)
   RUN_TEST(test_Stack_InitStatic);
   RUN_TEST(test_Stack_PushPopPeekIsEmpty);
   RUN_TEST(test_Stack_Reset);
+  RUN_TEST(test_Stack_IsFull);
 
   return UNITY_END();
 }

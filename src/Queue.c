@@ -233,7 +233,7 @@ bool Queue_IsEmpty(const Queue_t *const queue)
  ******************************************************************************/
 bool Queue_IsFull(const Queue_t *const queue)
 {
-  bool full = true;
+  bool full = false;
 
   if (queue != NULL)
   {
