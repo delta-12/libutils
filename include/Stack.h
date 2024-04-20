@@ -40,5 +40,6 @@ bool Stack_Pop(Stack_t *const stack, void *const item);
 bool Stack_Peek(const Stack_t *const stack, void *const item);
 bool Stack_Reset(Stack_t *const stack);
 bool Stack_IsEmpty(const Stack_t *const stack);
+bool Stack_IsFull(const Stack_t *const stack);
 
 #endif

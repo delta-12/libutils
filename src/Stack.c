@@ -219,3 +219,25 @@ bool Stack_IsEmpty(const Stack_t *const stack)
 
   return empty;
 }
+
+/**
+ * @brief Check if a stack is full.
+ *
+ * @param[in] stack Pointer to the stack to check
+ *
+ * @return Whether the stack is full or not
+ *
+ * @retval true  Stack is full
+ * @retval false Stack is not full
+ ******************************************************************************/
+bool Stack_IsFull(const Stack_t *const stack)
+{
+  bool full = false;
+
+  if (stack != NULL)
+  {
+    full = (stack->Items * stack->ItemSize == stack->BufferSize);
+  }
+
+  return full;
+}

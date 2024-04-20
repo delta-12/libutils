@@ -41,5 +41,6 @@ bool Queue_Pop(Queue_t *const queue, void *const item);
 bool Queue_Peek(const Queue_t *const queue, void *const item);
 bool Queue_Reset(Queue_t *const queue);
 bool Queue_IsEmpty(const Queue_t *const queue);
+bool Queue_IsFull(const Queue_t *const queue);
 
 #endif
