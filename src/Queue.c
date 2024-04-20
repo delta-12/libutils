@@ -222,6 +222,28 @@ bool Queue_IsEmpty(const Queue_t *const queue)
 }
 
 /**
+ * @brief Check if a queue is full.
+ *
+ * @param[in] queue Pointer to the queue to check
+ *
+ * @return Whether the queue is full or not
+ *
+ * @retval true  Queue is full
+ * @retval false Queue is not full
+ ******************************************************************************/
+bool Queue_IsFull(const Queue_t *const queue)
+{
+  bool full = true;
+
+  if (queue != NULL)
+  {
+    full = (queue->Items * queue->ItemSize == queue->BufferSize);
+  }
+
+  return full;
+}
+
+/**
  * @brief Increment a head or tail offset in a queue by the size of an item
  *        stored in the queue.
  *

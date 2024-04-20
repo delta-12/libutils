@@ -118,6 +118,36 @@ void test_Queue_Reset(void)
   TEST_ASSERT_FALSE(Queue_Peek(test_Queue, &item));
 }
 
+void test_Queue_IsFull(void)
+{
+  test_Queue_Item_t item = 0U;
+
+  Queue_Reset(test_Queue);
+
+  for (test_Queue_Item_t i = 0U; i < TEST_QUEUE_LENGTH; i++)
+  {
+    TEST_ASSERT_FALSE(Queue_IsFull(test_Queue));
+    Queue_Push(test_Queue, &i);
+  }
+  TEST_ASSERT_TRUE(Queue_IsFull(test_Queue));
+
+  Queue_Pop(test_Queue, &item);
+  TEST_ASSERT_FALSE(Queue_IsFull(test_Queue));
+  Queue_Push(test_Queue, &item);
+  TEST_ASSERT_TRUE(Queue_IsFull(test_Queue));
+
+  Queue_Reset(test_Queue);
+  for (test_Queue_Item_t i = 0U; i < TEST_QUEUE_LENGTH; i++)
+  {
+    TEST_ASSERT_FALSE(Queue_IsFull(test_Queue));
+    Queue_Push(test_Queue, &i);
+  }
+  TEST_ASSERT_TRUE(Queue_IsFull(test_Queue));
+
+  Queue_Reset(test_Queue);
+  TEST_ASSERT_FALSE(Queue_IsFull(test_Queue));
+}
+
 int main(void)
 {
   UNITY_BEGIN();
@@ -126,6 +156,7 @@ int main(void)
   RUN_TEST(test_Queue_InitStatic);
   RUN_TEST(test_Queue_PushPopPeekIsEmpty);
   RUN_TEST(test_Queue_Reset);
+  RUN_TEST(test_Queue_IsFull);
 
   return UNITY_END();
 }
