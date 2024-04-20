@@ -19,9 +19,9 @@ jobs:
           key: ${{ env.cache-name }}-${{ hashFiles('**/CMakeLists.txt', '**.cmake') }}
       - name: Generate CMake cache
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: cmake -B build -G Ninja
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
       - name: Cppcheck
-        run: cmake --build build --target cppcheck
+        run: cmake --build build -j$(nproc) --target cppcheck
       - name: Upload Cppcheck Report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -47,7 +47,7 @@ jobs:
           key: ${{ env.cache-name }}-${{ hashFiles('**/CMakeLists.txt', '**.cmake') }}
       - name: Generate CMake cache
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: cmake -B build -G Ninja
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
       - name: Build tests
         run: cmake --build build -j$(nproc)
       - name: Execute tests
@@ -58,30 +58,12 @@ jobs:
         with:
           name: unit-tests-log
           path: build/Testing/Temporary/LastTest.log
-      - name: Upload DoublyLinkedList valgrind report
+      - name: Upload Valgrind reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test_DoublyLinkedList-valgrind-report
-          path: build/LinkedList/test_DoublyLinkedList-valgrind-report.xml
-      - name: Upload SinglyLinkedList valgrind report
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: test_SinglyLinkedList-valgrind-report
-          path: build/LinkedList/test_SinglyLinkedList-valgrind-report.xml
-      - name: Upload Queue valgrind report
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: test_Queue-valgrind-report
-          path: build/Queue/test_Queue-valgrind-report.xml
-      - name: Upload Stack valgrind report
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: test_Stack-valgrind-report
-          path: build/Stack/test_Stack-valgrind-report.xml
+          name: valgrind-reports
+          path: build/Testing/Temporary/test_*-valgrind-report.xml
   uncrustify:
     runs-on: ubuntu-latest
     container:
@@ -101,9 +83,9 @@ jobs:
           key: ${{ env.cache-name }}-${{ hashFiles('**/CMakeLists.txt', '**.cmake') }}
       - name: Generate CMake cache
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: cmake -B build -G Ninja
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
       - name: Crust check
-        run: cmake --build build --target uncrustify-check
+        run: cmake --build build -j$(nproc) --target uncrustify-check
       - name: Upload Uncrustify Report
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
