@@ -63,9 +63,22 @@ bool BinarySearchTree_Insert(BinarySearchTree_t *const tree, const BinarySearchT
 
     BinarySearchTree_GetNode(tree, key, &node, &parent);
 
-    if (node == NULL)
+    if (parent == NULL)
     {
       tree->Root = newNode;
+
+      inserted = true;
+    }
+    else if (node == NULL)
+    {
+      if (key < parent->Key)
+      {
+        parent->Left = newNode;
+      }
+      else
+      {
+        parent->Right = newNode;
+      }
 
       inserted = true;
     }
@@ -73,15 +86,10 @@ bool BinarySearchTree_Insert(BinarySearchTree_t *const tree, const BinarySearchT
     {
       free(newNode);
     }
-    else if (key > node->Key)
-    {
-      node->Right = newNode;
-
-      inserted = true;
-    }
     else
     {
-      node->Left = newNode;
+      newNode->Right = node->Right;
+      node->Right = newNode;
 
       inserted = true;
     }
@@ -174,7 +182,7 @@ bool BinarySearchTree_Reset(BinarySearchTree_t *const tree)
                                                                              will not perform well with unbalanced trees.  MUST be updated to new Stack API. */
     BinarySearchTree_Node_t *node;
 
-    Stack_Push(stack, tree->Root);
+    Stack_Push(stack, &tree->Root);
     tree->Root = NULL;
 
     while (!Stack_IsEmpty(stack))
@@ -183,8 +191,8 @@ bool BinarySearchTree_Reset(BinarySearchTree_t *const tree)
 
       if (node != NULL)
       {
-        Stack_Push(stack, node->Left);
-        Stack_Push(stack, node->Right);
+        Stack_Push(stack, &node->Left);
+        Stack_Push(stack, &node->Right);
 
         free(node);
       }
