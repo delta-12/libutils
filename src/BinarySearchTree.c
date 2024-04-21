@@ -58,6 +58,7 @@ bool BinarySearchTree_Insert(BinarySearchTree_t *const tree, const BinarySearchT
     newNode->Left = NULL;
     newNode->Right = NULL;
     newNode->Key = key;
+    newNode->Item = (uint8_t *)newNode + sizeof(BinarySearchTree_Node_t);
     memcpy(newNode->Item, item, tree->ItemSize);
 
     BinarySearchTree_GetNode(tree, key, &node, &parent);
@@ -174,6 +175,7 @@ bool BinarySearchTree_Reset(BinarySearchTree_t *const tree)
     BinarySearchTree_Node_t *node;
 
     Stack_Push(stack, tree->Root);
+    tree->Root = NULL;
 
     while (!Stack_IsEmpty(stack))
     {
