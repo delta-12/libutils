@@ -139,6 +139,7 @@ void test_Stack_IsFull(void)
   test_Stack_Item_t item = 0U;
 
   Stack_Reset(test_Stack);
+  TEST_ASSERT_FALSE(Stack_IsFull(NULL));
 
   for (test_Stack_Item_t i = 0U; i < TEST_STACK_LENGTH; i++)
   {
