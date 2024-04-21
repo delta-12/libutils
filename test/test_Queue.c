@@ -38,6 +38,10 @@ void test_Queue_InitStatic(void)
   Queue_t queue;
   test_Queue_Item_t item;
 
+  TEST_ASSERT_FALSE(Queue_InitStatic(NULL, test_QueueStaticBuffer, TEST_QUEUE_LENGTH, TEST_QUEUE_ITEM_SIZE));
+  TEST_ASSERT_FALSE(Queue_InitStatic(&queue, NULL, TEST_QUEUE_LENGTH, TEST_QUEUE_ITEM_SIZE));
+  TEST_ASSERT_FALSE(Queue_InitStatic(NULL, NULL, TEST_QUEUE_LENGTH, TEST_QUEUE_ITEM_SIZE));
+
   TEST_ASSERT_TRUE(Queue_InitStatic(&queue, test_QueueStaticBuffer, TEST_QUEUE_LENGTH, TEST_QUEUE_ITEM_SIZE));
   TEST_ASSERT_TRUE(Queue_IsEmpty(&queue));
   TEST_ASSERT_FALSE(Queue_Pop(&queue, &item));
@@ -49,6 +53,16 @@ void test_Queue_PushPopPeekIsEmpty(void)
   test_Queue_Item_t item;
 
   Queue_Reset(test_Queue);
+  TEST_ASSERT_FALSE(Queue_Push(test_Queue, NULL));
+  TEST_ASSERT_FALSE(Queue_Push(NULL, &item));
+  TEST_ASSERT_FALSE(Queue_Push(NULL, NULL));
+  TEST_ASSERT_FALSE(Queue_Pop(test_Queue, NULL));
+  TEST_ASSERT_FALSE(Queue_Pop(NULL, &item));
+  TEST_ASSERT_FALSE(Queue_Pop(NULL, NULL));
+  TEST_ASSERT_FALSE(Queue_Peek(test_Queue, NULL));
+  TEST_ASSERT_FALSE(Queue_Peek(NULL, &item));
+  TEST_ASSERT_FALSE(Queue_Peek(NULL, NULL));
+  TEST_ASSERT_TRUE(Queue_IsEmpty(NULL));
 
   item = 0U;
   TEST_ASSERT_TRUE(Queue_Push(test_Queue, &item));
@@ -112,6 +126,8 @@ void test_Queue_Reset(void)
 {
   test_Queue_Item_t item;
 
+  TEST_ASSERT_FALSE(Queue_Reset(NULL));
+
   TEST_ASSERT_TRUE(Queue_Reset(test_Queue));
   TEST_ASSERT_TRUE(Queue_IsEmpty(test_Queue));
   TEST_ASSERT_FALSE(Queue_Pop(test_Queue, &item));
@@ -123,6 +139,7 @@ void test_Queue_IsFull(void)
   test_Queue_Item_t item = 0U;
 
   Queue_Reset(test_Queue);
+  TEST_ASSERT_FALSE(Queue_IsFull(NULL));
 
   for (test_Queue_Item_t i = 0U; i < TEST_QUEUE_LENGTH; i++)
   {
