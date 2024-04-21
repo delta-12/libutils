@@ -1,5 +1,5 @@
 /**
- * @file BinarySearchTime.c
+ * @file BinarySearchTree.c
  *
  * @brief Binary search tree.
  *
@@ -9,19 +9,28 @@
  ******************************************************************************/
 
 #include "BinarySearchTree.h"
+#include "Stack.h"
 #include <string.h>
+
+/* Function Prototypes
+ ******************************************************************************/
+
+static void BinarySearchTree_GetNode(const BinarySearchTree_t *const tree,
+                                     const BinarySearchTree_Key_t key,
+                                     const BinarySearchTree_Node_t *node,
+                                     const BinarySearchTree_Node_t *parent);
+static bool BinarySearchTree_CompareNodes(const BinarySearchTree_t *const tree, const BinarySearchTree_Node_t *const a, const BinarySearchTree_Node_t *const b);
 
 /* Function Definitions
  ******************************************************************************/
 
-bool BinarySearchTree_Init(BinarySearchTree_t *const tree, const size_t keySize, const size_t itemSize)
+bool BinarySearchTree_Init(BinarySearchTree_t *const tree, const size_t itemSize)
 {
   bool init = false;
 
   if (tree != NULL)
   {
     tree->Root = NULL;
-    tree->KeySize = keySize;
     tree->ItemSize = itemSize;
 
     init = true;
@@ -35,23 +44,55 @@ bool BinarySearchTree_Free(BinarySearchTree_t *const tree)
   return BinarySearchTree_Reset(tree);
 }
 
-bool BinarySearchTree_Insert(BinarySearchTree_t *const tree, const void *const key, const void *const item)
+bool BinarySearchTree_Insert(BinarySearchTree_t *const tree, const BinarySearchTree_Key_t key, const void *const item)
 {
   bool inserted = false;
 
-  if (tree != NULL && key != NULL && item != NULL)
+  if (tree != NULL && item != NULL)
   {
-    /* TODO */
+    BinarySearchTree_Node_t *newNode = (BinarySearchTree_Node_t *)malloc(sizeof(BinarySearchTree_Node_t) + tree->ItemSize);
+    BinarySearchTree_Node_t *node;
+    BinarySearchTree_Node_t *parent;
+
+    newNode->Left = NULL;
+    newNode->Right = NULL;
+    newNode->Key = key;
+    memcpy(newNode->Item, item, tree->ItemSize);
+
+    BinarySearchTree_GetNode(tree, key, node, parent);
+
+    if (node == NULL)
+    {
+      tree->Root = newNode;
+
+      inserted = true;
+    }
+    else if (BinarySearchTree_CompareNodes(tree, newNode, node))
+    {
+      free(newNode);
+    }
+    else if (key > node->Key)
+    {
+      node->Right = newNode;
+
+      inserted = true;
+    }
+    else
+    {
+      node->Left = newNode;
+
+      inserted = true;
+    }
   }
 
   return inserted;
 }
 
-bool BinarySearchTree_Remove(BinarySearchTree_t *const tree, const void *const key)
+bool BinarySearchTree_Remove(BinarySearchTree_t *const tree, const BinarySearchTree_Key_t key)
 {
   bool removed = false;
 
-  if (tree != NULL && key != NULL)
+  if (tree != NULL)
   {
     /* TODO */
   }
@@ -59,13 +100,23 @@ bool BinarySearchTree_Remove(BinarySearchTree_t *const tree, const void *const k
   return removed;
 }
 
-bool BinarySearchTree_Search(BinarySearchTree_t *const tree, const void *const key, void *const item)
+bool BinarySearchTree_Search(const BinarySearchTree_t *const tree, const BinarySearchTree_Key_t key, void *const item)
 {
   bool found = false;
 
-  if (tree != NULL && key != NULL && item != NULL)
+  if (tree != NULL && item != NULL)
   {
-    /* TODO */
+    BinarySearchTree_Node_t *node;
+    BinarySearchTree_Node_t *parent;
+
+    BinarySearchTree_GetNode(tree, key, node, parent);
+
+    if (node != NULL)
+    {
+      memcpy(item, node->Item, tree->ItemSize);
+
+      found = true;
+    }
   }
 
   return found;
@@ -77,8 +128,99 @@ bool BinarySearchTree_Reset(BinarySearchTree_t *const tree)
 
   if (tree != NULL)
   {
-    /* TODO */
+    Stack_t *stack = Stack_Init(20UL, sizeof(BinarySearchTree_Node_t *)); /* TODO 20 items should be enough for balanced BST with ~1 million nodes,
+                                                                             will not perform well with unbalanced trees.  MUST be updated to new Stack API. */
+    BinarySearchTree_Node_t *node;
+
+    Stack_Push(stack, tree->Root);
+
+    while (!Stack_IsEmpty(stack))
+    {
+      Stack_Pop(stack, node);
+
+      if (node != NULL)
+      {
+        Stack_Push(stack, node->Left);
+        Stack_Push(stack, node->Right);
+
+        free(node);
+      }
+    }
+
+    Stack_Free(stack);
+
+    reset = true;
   }
 
   return reset;
+}
+
+static void BinarySearchTree_GetNode(const BinarySearchTree_t *const tree,
+                                     const BinarySearchTree_Key_t key,
+                                     const BinarySearchTree_Node_t *node,
+                                     const BinarySearchTree_Node_t *parent)
+{
+  bool finished = false;
+
+  node = tree->Root;
+  parent = NULL;
+
+  if (node == NULL)
+  {
+    finished = true;
+  }
+
+  while (!finished)
+  {
+    if (node->Key == key)
+    {
+      finished = true;
+    }
+    else if (key < node->Key)
+    {
+      if (node->Left != NULL)
+      {
+        parent = node;
+        node = node->Left;
+      }
+      else
+      {
+        finished = true;
+      }
+    }
+    else
+    {
+      if (node->Right != NULL)
+      {
+        parent = node;
+        node = node->Right;
+      }
+      else
+      {
+        finished = true;
+      }
+    }
+  }
+}
+
+static bool BinarySearchTree_CompareNodes(const BinarySearchTree_t *const tree, const BinarySearchTree_Node_t *const a, const BinarySearchTree_Node_t *const b)
+{
+  bool equal = true;
+
+  if (a->Key == b->Key)
+  {
+    for (size_t i = 0UL; i < tree->ItemSize; i++)
+    {
+      if (*(a->Item + i) != *(b->Item + i))
+      {
+        equal = false;
+      }
+    }
+  }
+  else
+  {
+    equal = false;
+  }
+
+  return equal;
 }
