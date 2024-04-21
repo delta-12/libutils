@@ -139,8 +139,12 @@ bool Stack_Pop(Stack_t *const stack, void *const item)
 
   if (Stack_Peek(stack, item))
   {
-    stack->Top -= stack->ItemSize;
     stack->Items--;
+
+    if (stack->Items > 0UL)
+    {
+      stack->Top -= stack->ItemSize;
+    }
 
     popped = true;
   }
