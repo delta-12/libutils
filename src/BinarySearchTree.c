@@ -17,8 +17,9 @@
 
 static void BinarySearchTree_GetNode(const BinarySearchTree_t *const tree,
                                      const BinarySearchTree_Key_t key,
-                                     const BinarySearchTree_Node_t *node,
-                                     const BinarySearchTree_Node_t *parent);
+                                     BinarySearchTree_Node_t **const node,
+                                     BinarySearchTree_Node_t **const parent);
+static void BinarySearchTree_GetSuccessor(BinarySearchTree_Node_t *const node, BinarySearchTree_Node_t **const successor, BinarySearchTree_Node_t **const parent);
 static bool BinarySearchTree_CompareNodes(const BinarySearchTree_t *const tree, const BinarySearchTree_Node_t *const a, const BinarySearchTree_Node_t *const b);
 
 /* Function Definitions
@@ -59,7 +60,7 @@ bool BinarySearchTree_Insert(BinarySearchTree_t *const tree, const BinarySearchT
     newNode->Key = key;
     memcpy(newNode->Item, item, tree->ItemSize);
 
-    BinarySearchTree_GetNode(tree, key, node, parent);
+    BinarySearchTree_GetNode(tree, key, &node, &parent);
 
     if (node == NULL)
     {
@@ -94,7 +95,47 @@ bool BinarySearchTree_Remove(BinarySearchTree_t *const tree, const BinarySearchT
 
   if (tree != NULL)
   {
-    /* TODO */
+    BinarySearchTree_Node_t *node;
+    BinarySearchTree_Node_t *parent;
+
+    BinarySearchTree_GetNode(tree, key, &node, &parent);
+
+    if (node != NULL)
+    {
+      BinarySearchTree_Node_t *successor;
+      BinarySearchTree_Node_t *successorParent;
+
+      BinarySearchTree_GetSuccessor(node, &successor, &successorParent);
+
+      if (parent == NULL)
+      {
+        tree->Root = successor;
+      }
+      else
+      {
+        if (parent->Left == node)
+        {
+          parent->Left = successor;
+        }
+        else
+        {
+          parent->Right = successor;
+        }
+      }
+
+      if (successor != NULL)
+      {
+        successor->Left = node->Left;
+
+        if (successorParent != node)
+        {
+          successor->Right = node->Right;
+          successorParent->Left = NULL;
+        }
+      }
+
+      free(node);
+    }
   }
 
   return removed;
@@ -109,7 +150,7 @@ bool BinarySearchTree_Search(const BinarySearchTree_t *const tree, const BinaryS
     BinarySearchTree_Node_t *node;
     BinarySearchTree_Node_t *parent;
 
-    BinarySearchTree_GetNode(tree, key, node, parent);
+    BinarySearchTree_GetNode(tree, key, &node, &parent);
 
     if (node != NULL)
     {
@@ -136,7 +177,7 @@ bool BinarySearchTree_Reset(BinarySearchTree_t *const tree)
 
     while (!Stack_IsEmpty(stack))
     {
-      Stack_Pop(stack, node);
+      Stack_Pop(stack, &node);
 
       if (node != NULL)
       {
@@ -157,47 +198,46 @@ bool BinarySearchTree_Reset(BinarySearchTree_t *const tree)
 
 static void BinarySearchTree_GetNode(const BinarySearchTree_t *const tree,
                                      const BinarySearchTree_Key_t key,
-                                     const BinarySearchTree_Node_t *node,
-                                     const BinarySearchTree_Node_t *parent)
+                                     BinarySearchTree_Node_t **const node,
+                                     BinarySearchTree_Node_t **const parent)
 {
-  bool finished = false;
+  *node = tree->Root;
+  *parent = NULL;
 
-  node = tree->Root;
-  parent = NULL;
-
-  if (node == NULL)
+  while (*node != NULL && (*node)->Key != key)
   {
-    finished = true;
-  }
+    *parent = *node;
 
-  while (!finished)
-  {
-    if (node->Key == key)
+    if (key < (*node)->Key)
     {
-      finished = true;
-    }
-    else if (key < node->Key)
-    {
-      if (node->Left != NULL)
-      {
-        parent = node;
-        node = node->Left;
-      }
-      else
-      {
-        finished = true;
-      }
+      *node = (*node)->Left;
     }
     else
     {
-      if (node->Right != NULL)
+      *node = (*node)->Right;
+    }
+  }
+}
+
+static void BinarySearchTree_GetSuccessor(BinarySearchTree_Node_t *const node, BinarySearchTree_Node_t **const successor, BinarySearchTree_Node_t **const parent)
+{
+  *successor = NULL;
+  *parent = node;
+
+  if (node != NULL)
+  {
+    if (node->Right == NULL)
+    {
+      *successor = node->Left;
+    }
+    else
+    {
+      *successor = node->Right;
+
+      while ((*successor)->Left != NULL)
       {
-        parent = node;
-        node = node->Right;
-      }
-      else
-      {
-        finished = true;
+        *parent = *successor;
+        *successor = (*successor)->Left;
       }
     }
   }
