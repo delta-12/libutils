@@ -62,7 +62,7 @@ bool BinarySearchTree_Insert(BinarySearchTree_t *const tree, const BinarySearchT
 
     BinarySearchTree_GetNode(tree, key, &node, &parent);
 
-    if (parent == NULL)
+    if (parent == NULL && tree->Root == NULL)
     {
       tree->Root = newNode;
 
@@ -126,12 +126,15 @@ bool BinarySearchTree_Remove(BinarySearchTree_t *const tree, const BinarySearchT
 
       if (successor != NULL)
       {
-        successor->Left = node->Left;
+        if (successor != node->Left)
+        {
+          successor->Left = node->Left;
+        }
 
         if (successorParent != node)
         {
+          successorParent->Left = successor->Right;
           successor->Right = node->Right;
-          successorParent->Left = NULL;
         }
       }
 
