@@ -20,7 +20,6 @@ static void BinarySearchTree_GetNode(const BinarySearchTree_t *const tree,
                                      BinarySearchTree_Node_t **const node,
                                      BinarySearchTree_Node_t **const parent);
 static void BinarySearchTree_GetSuccessor(BinarySearchTree_Node_t *const node, BinarySearchTree_Node_t **const successor, BinarySearchTree_Node_t **const parent);
-static bool BinarySearchTree_CompareNodes(const BinarySearchTree_t *const tree, const BinarySearchTree_Node_t *const a, const BinarySearchTree_Node_t *const b);
 
 /* Function Definitions
  ******************************************************************************/
@@ -82,16 +81,9 @@ bool BinarySearchTree_Insert(BinarySearchTree_t *const tree, const BinarySearchT
 
       inserted = true;
     }
-    else if (BinarySearchTree_CompareNodes(tree, newNode, node))
-    {
-      free(newNode);
-    }
     else
     {
-      newNode->Right = node->Right;
-      node->Right = newNode;
-
-      inserted = true;
+      free(newNode);
     }
   }
 
@@ -144,6 +136,8 @@ bool BinarySearchTree_Remove(BinarySearchTree_t *const tree, const BinarySearchT
       }
 
       free(node);
+
+      removed = true;
     }
   }
 
@@ -251,26 +245,4 @@ static void BinarySearchTree_GetSuccessor(BinarySearchTree_Node_t *const node, B
       }
     }
   }
-}
-
-static bool BinarySearchTree_CompareNodes(const BinarySearchTree_t *const tree, const BinarySearchTree_Node_t *const a, const BinarySearchTree_Node_t *const b)
-{
-  bool equal = true;
-
-  if (a->Key == b->Key)
-  {
-    for (size_t i = 0UL; i < tree->ItemSize; i++)
-    {
-      if (*(a->Item + i) != *(b->Item + i))
-      {
-        equal = false;
-      }
-    }
-  }
-  else
-  {
-    equal = false;
-  }
-
-  return equal;
 }
