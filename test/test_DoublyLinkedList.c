@@ -395,6 +395,170 @@ void test_DoublyLinkedList_Remove(void)
   TEST_ASSERT_FALSE(DoublyLinkedList_Remove(&test_DoublyLinkedList_List, 0L, NULL));
 }
 
+void test_DoublyLinkedList_GetHead(void)
+{
+  DoublyLinkedList_Reset(&test_DoublyLinkedList_List);
+
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, NULL));
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetHead(NULL, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetHead(NULL, NULL));
+
+  test_DoublyLinkedList_Item = 0UL;
+  DoublyLinkedList_AppendLeft(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, NULL));
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(0UL, test_DoublyLinkedList_Item);
+
+  DoublyLinkedList_Reset(&test_DoublyLinkedList_List);
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  test_DoublyLinkedList_Item = 1UL;
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 2UL;
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(1UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 3UL;
+  DoublyLinkedList_AppendLeft(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(3UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(3UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 4UL;
+  DoublyLinkedList_Insert(&test_DoublyLinkedList_List, 1UL, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(3UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 5UL;
+  DoublyLinkedList_Insert(&test_DoublyLinkedList_List, 0UL, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(5UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_PopLeft(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(3UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 6UL;
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(3UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Remove(&test_DoublyLinkedList_List, 0UL, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(4UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 7UL;
+  DoublyLinkedList_AppendLeft(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(7UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Remove(&test_DoublyLinkedList_List, 2UL, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(7UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_PopLeft(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(4UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_PopLeft(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(6UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetHead(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+}
+
+void test_DoublyLinkedList_GetTail(void)
+{
+  DoublyLinkedList_Reset(&test_DoublyLinkedList_List);
+
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, NULL));
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetTail(NULL, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetTail(NULL, NULL));
+
+  test_DoublyLinkedList_Item = 0UL;
+  DoublyLinkedList_AppendLeft(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, NULL));
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(0UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Reset(&test_DoublyLinkedList_List);
+
+  DoublyLinkedList_Reset(&test_DoublyLinkedList_List);
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  test_DoublyLinkedList_Item = 1UL;
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 2UL;
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(2UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 3UL;
+  DoublyLinkedList_AppendLeft(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(2UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(1UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 4UL;
+  DoublyLinkedList_Insert(&test_DoublyLinkedList_List, 2UL, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(4UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 5UL;
+  DoublyLinkedList_Insert(&test_DoublyLinkedList_List, 2UL, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(4UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_PopLeft(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(4UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 6UL;
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(6UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Remove(&test_DoublyLinkedList_List, 3UL, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(4UL, test_DoublyLinkedList_Item);
+  test_DoublyLinkedList_Item = 7UL;
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(7UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Remove(&test_DoublyLinkedList_List, 3UL, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(4UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(5UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+  TEST_ASSERT_EQUAL(1UL, test_DoublyLinkedList_Item);
+  DoublyLinkedList_PopLeft(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_FALSE(DoublyLinkedList_GetTail(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item));
+}
+
+void test_DoublyLinkedList_IsEmpty(void)
+{
+  DoublyLinkedList_Reset(&test_DoublyLinkedList_List);
+
+  TEST_ASSERT_TRUE(DoublyLinkedList_IsEmpty(NULL));
+  TEST_ASSERT_TRUE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+
+  test_DoublyLinkedList_Item = 0UL;
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_FALSE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_FALSE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_FALSE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_FALSE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+
+  DoublyLinkedList_Append(&test_DoublyLinkedList_List, &test_DoublyLinkedList_Item);
+  TEST_ASSERT_FALSE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+  DoublyLinkedList_Pop(&test_DoublyLinkedList_List, NULL);
+  TEST_ASSERT_TRUE(DoublyLinkedList_IsEmpty(&test_DoublyLinkedList_List));
+}
+
 int main(void)
 {
   UNITY_BEGIN();
@@ -409,6 +573,9 @@ int main(void)
   RUN_TEST(test_DoublyLinkedList_GetLength);
   RUN_TEST(test_DoublyLinkedList_Insert);
   RUN_TEST(test_DoublyLinkedList_Remove);
+  RUN_TEST(test_DoublyLinkedList_GetHead);
+  RUN_TEST(test_DoublyLinkedList_GetTail);
+  RUN_TEST(test_DoublyLinkedList_IsEmpty);
 
   return UNITY_END();
 }

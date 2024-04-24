@@ -59,5 +59,8 @@ DoublyLinkedList_Index_t DoublyLinkedList_GetIndex(const DoublyLinkedList_t *con
 DoublyLinkedList_Length_t DoublyLinkedList_GetLength(const DoublyLinkedList_t *const list);
 bool DoublyLinkedList_Insert(DoublyLinkedList_t *const list, const DoublyLinkedList_Index_t index, const void *const item);
 bool DoublyLinkedList_Remove(DoublyLinkedList_t *const list, const DoublyLinkedList_Index_t index, void *const item);
+bool DoublyLinkedList_GetHead(const DoublyLinkedList_t *const list, void *const item);
+bool DoublyLinkedList_GetTail(const DoublyLinkedList_t *const list, void *const item);
+bool DoublyLinkedList_IsEmpty(const DoublyLinkedList_t *const list);
 
 #endif

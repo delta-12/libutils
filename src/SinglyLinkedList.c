@@ -422,3 +422,86 @@ bool SinglyLinkedList_Remove(SinglyLinkedList_t *const list, const SinglyLinkedL
 
   return removed;
 }
+
+/**
+ * @brief Get the item from at the head of a singly linked list.
+ *
+ * @param[in]     list Pointer to the list to get the item from
+ * @param[in,out] item Pointer to a buffer large enough to copy the item
+ *                     into
+ *
+ * @return Whether getting the the item at the head of the list was successful
+ *         or not
+ *
+ * @retval true  Successfully got at the item at the head of the list
+ * @retval false Failed to get the item at the head of the list
+ ******************************************************************************/
+bool SinglyLinkedList_GetHead(const SinglyLinkedList_t *const list, void *const item)
+{
+  bool get = false;
+
+  if (list != NULL && item != NULL && !SinglyLinkedList_IsEmpty(list))
+  {
+    memcpy(item, list->Head->Item, list->ItemSize);
+
+    get = true;
+  }
+
+  return get;
+}
+
+/**
+ * @brief Get the item from at the tail of a singly linked list.
+ *
+ * @param[in]     list Pointer to the list to get the item from
+ * @param[in,out] item Pointer to a buffer large enough to copy the item
+ *                     into
+ *
+ * @return Whether getting the the item at the tail of the list was successful
+ *         or not
+ *
+ * @retval true  Successfully got at the item at the tail of the list
+ * @retval false Failed to get the item at the tail of the list
+ ******************************************************************************/
+bool SinglyLinkedList_GetTail(const SinglyLinkedList_t *const list, void *const item)
+{
+  bool get = false;
+
+  if (list != NULL && item != NULL && !SinglyLinkedList_IsEmpty(list))
+  {
+    const SinglyLinkedList_Node_t *node = list->Head;
+
+    while (node->Next != NULL)
+    {
+      node = node->Next;
+    }
+
+    memcpy(item, node->Item, list->ItemSize);
+
+    get = true;
+  }
+
+  return get;
+}
+
+/**
+ * @brief Check if a singly linked list is empty.
+ *
+ * @param[in] list Pointer to the list to check
+ *
+ * @return Whether the list is empty or not
+ *
+ * @retval true  List is empty
+ * @retval false List is not empty
+ ******************************************************************************/
+bool SinglyLinkedList_IsEmpty(const SinglyLinkedList_t *const list)
+{
+  bool empty = true;
+
+  if (list != NULL)
+  {
+    empty = (list->Head == NULL);
+  }
+
+  return empty;
+}

@@ -1,7 +1,7 @@
 /**
  * @file Stack.c
  *
- * @brief Dynamically and statically allocated fixed-sized stacks.
+ * @brief Dynamically and statically allocated stacks.
  *
  ******************************************************************************/
 
@@ -17,27 +17,25 @@
 /**
  * @brief Initialize a dynamically allocated stack.
  *
- * @param[in] length   Maximum number of items the stack can hold
- * @param[in] itemSize Size in bytes of the items held in the stack
+ * @param[in,out] stack    Pointer to the stack to initialize
+ * @param[in]     itemSize Size in bytes of the items held in the stack
  *
- * @return Pointer to the initialized stack
+ * @return Whether the stack was successfully initialized or not
  *
- * @retval NULL Failed to initialize a stack
+ * @retval true  Successfully initialized
+ * @retval false Failed to initialize
  ******************************************************************************/
-Stack_t *Stack_Init(const uint64_t length, const size_t itemSize)
+bool Stack_Init(Stack_t *const stack, const size_t itemSize)
 {
-  uint8_t *allocated = (uint8_t *)malloc(sizeof(Stack_t) + (length * itemSize));
-  Stack_t *stack = (Stack_t *)allocated;
-  uint8_t *buffer = (uint8_t *)(allocated + sizeof(Stack_t));
+  bool init = false;
 
-  if (!Stack_InitStatic(stack, buffer, length, itemSize))
+  if (stack != NULL)
   {
-    Stack_Free(stack);
-
-    stack = NULL;
+    stack->Static = false;
+    init = SinglyLinkedList_Init(&stack->LinkedList, itemSize);
   }
 
-  return stack;
+  return init;
 }
 
 /**
@@ -65,6 +63,7 @@ bool Stack_InitStatic(Stack_t *const stack, uint8_t *const buffer, const uint64_
     stack->Length = length;
     stack->ItemSize = itemSize;
     stack->BufferSize = stack->Length * stack->ItemSize;
+    stack->Static = true;
     Stack_Reset(stack);
 
     init = true;
@@ -77,13 +76,22 @@ bool Stack_InitStatic(Stack_t *const stack, uint8_t *const buffer, const uint64_
  * @brief Free a dynamically allocated stack.
  *
  * @param[in,out] stack Pointer to the stack to free
+ *
+ * @return Whether the stack was successfully freed or not
+ *
+ * @retval true  Successfully freed
+ * @retval false Failed to free
  ******************************************************************************/
-void Stack_Free(Stack_t *const stack)
+bool Stack_Free(Stack_t *const stack)
 {
-  if (stack != NULL)
+  bool freed = false;
+
+  if (stack != NULL && !stack->Static)
   {
-    free((void *)stack);
+    freed = SinglyLinkedList_Free(&stack->LinkedList);
   }
+
+  return freed;
 }
 
 /**
@@ -104,7 +112,7 @@ bool Stack_Push(Stack_t *const stack, const void *const item)
 
   if (stack != NULL && item != NULL)
   {
-    if (stack->Items < stack->Length)
+    if (stack->Static && stack->Items < stack->Length)
     {
       if (stack->Items > 0UL)
       {
@@ -115,6 +123,10 @@ bool Stack_Push(Stack_t *const stack, const void *const item)
       stack->Items++;
 
       pushed = true;
+    }
+    else
+    {
+      pushed = SinglyLinkedList_AppendLeft(&stack->LinkedList, item);
     }
   }
 
@@ -139,14 +151,21 @@ bool Stack_Pop(Stack_t *const stack, void *const item)
 
   if (Stack_Peek(stack, item))
   {
-    stack->Items--;
-
-    if (stack->Items > 0UL)
+    if (stack->Static)
     {
-      stack->Top -= stack->ItemSize;
-    }
+      stack->Items--;
 
-    popped = true;
+      if (stack->Items > 0UL)
+      {
+        stack->Top -= stack->ItemSize;
+      }
+
+      popped = true;
+    }
+    else
+    {
+      popped = SinglyLinkedList_PopLeft(&stack->LinkedList, NULL);
+    }
   }
 
   return popped;
@@ -169,13 +188,17 @@ bool Stack_Peek(const Stack_t *const stack, void *const item)
 {
   bool peeked = false;
 
-  if (stack != NULL && item != NULL)
+  if (!Stack_IsEmpty(stack) && item != NULL)
   {
-    if (!Stack_IsEmpty(stack))
+    if (stack->Static)
     {
       memcpy(item, stack->Buffer + stack->Top, stack->ItemSize);
 
       peeked = true;
+    }
+    else
+    {
+      peeked = SinglyLinkedList_GetHead(&stack->LinkedList, item);
     }
   }
 
@@ -193,10 +216,17 @@ bool Stack_Reset(Stack_t *const stack)
 
   if (stack != NULL)
   {
-    stack->Items = 0UL;
-    stack->Top = 0UL;
+    if (stack->Static)
+    {
+      stack->Items = 0UL;
+      stack->Top = 0UL;
 
-    reset = true;
+      reset = true;
+    }
+    else
+    {
+      reset = SinglyLinkedList_Reset(&stack->LinkedList);
+    }
   }
 
   return reset;
@@ -218,7 +248,14 @@ bool Stack_IsEmpty(const Stack_t *const stack)
 
   if (stack != NULL)
   {
-    empty = (stack->Items == 0UL);
+    if (stack->Static)
+    {
+      empty = (stack->Items == 0UL);
+    }
+    else
+    {
+      empty = SinglyLinkedList_IsEmpty(&stack->LinkedList);
+    }
   }
 
   return empty;
@@ -238,7 +275,7 @@ bool Stack_IsFull(const Stack_t *const stack)
 {
   bool full = false;
 
-  if (stack != NULL)
+  if (stack != NULL && stack->Static)
   {
     full = (stack->Items * stack->ItemSize == stack->BufferSize);
   }

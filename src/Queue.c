@@ -1,7 +1,7 @@
 /**
  * @file Queue.c
  *
- * @brief Dynamically and statically allocated fixed-sized queues.
+ * @brief Dynamically and statically allocated queues.
  *
  ******************************************************************************/
 
@@ -22,27 +22,25 @@ static inline void Queue_AdvanceItemOffset(const Queue_t *const queue, size_t *c
 /**
  * @brief Initialize a dynamically allocated queue.
  *
- * @param[in] length   Maximum number of items the queue can hold
- * @param[in] itemSize Size in bytes of the items held in the queue
+ * @param[in,out] queue    Pointer to the queue to initialize
+ * @param[in]     itemSize Size in bytes of the items held in the queue
  *
- * @return Pointer to the initialized queue
+ * @return Whether the queue was successfully initialized or not
  *
- * @retval NULL Failed to initialize a queue
+ * @retval true  Successfully initialized
+ * @retval false Failed to initialize
  ******************************************************************************/
-Queue_t *Queue_Init(const uint64_t length, const size_t itemSize)
+bool Queue_Init(Queue_t *const queue, const size_t itemSize)
 {
-  uint8_t *allocated = (uint8_t *)malloc(sizeof(Queue_t) + (length * itemSize));
-  Queue_t *queue = (Queue_t *)allocated;
-  uint8_t *buffer = (uint8_t *)(allocated + sizeof(Queue_t));
+  bool init = false;
 
-  if (!Queue_InitStatic(queue, buffer, length, itemSize))
+  if (queue != NULL)
   {
-    Queue_Free(queue);
-
-    queue = NULL;
+    queue->Static = false;
+    init = DoublyLinkedList_Init(&queue->LinkedList, itemSize);
   }
 
-  return queue;
+  return init;
 }
 
 /**
@@ -70,6 +68,7 @@ bool Queue_InitStatic(Queue_t *const queue, uint8_t *const buffer, const uint64_
     queue->Length = length;
     queue->ItemSize = itemSize;
     queue->BufferSize = queue->Length * queue->ItemSize;
+    queue->Static = true;
     Queue_Reset(queue);
 
     init = true;
@@ -82,13 +81,22 @@ bool Queue_InitStatic(Queue_t *const queue, uint8_t *const buffer, const uint64_
  * @brief Free a dynamically allocated queue.
  *
  * @param[in,out] queue Pointer to the queue to free
+ *
+ * @return Whether the queue was successfully freed or not
+ *
+ * @retval true  Successfully freed
+ * @retval false Failed to free
  ******************************************************************************/
-void Queue_Free(Queue_t *const queue)
+bool Queue_Free(Queue_t *const queue)
 {
-  if (queue != NULL)
+  bool freed = false;
+
+  if (queue != NULL && !queue->Static)
   {
-    free((void *)queue);
+    freed = DoublyLinkedList_Free(&queue->LinkedList);
   }
+
+  return freed;
 }
 
 /**
@@ -108,13 +116,17 @@ bool Queue_Push(Queue_t *const queue, const void *const item)
 
   if (queue != NULL && item != NULL)
   {
-    if (queue->Items < queue->Length)
+    if (queue->Static && queue->Items < queue->Length)
     {
       memcpy(queue->Buffer + queue->Tail, item, queue->ItemSize);
       Queue_AdvanceItemOffset(queue, &queue->Tail);
       queue->Items++;
 
       pushed = true;
+    }
+    else
+    {
+      pushed = DoublyLinkedList_AppendLeft(&queue->LinkedList, item);
     }
   }
 
@@ -139,10 +151,17 @@ bool Queue_Pop(Queue_t *const queue, void *const item)
 
   if (Queue_Peek(queue, item))
   {
-    Queue_AdvanceItemOffset(queue, &queue->Head);
-    queue->Items--;
+    if (queue->Static)
+    {
+      Queue_AdvanceItemOffset(queue, &queue->Head);
+      queue->Items--;
 
-    popped = true;
+      popped = true;
+    }
+    else
+    {
+      popped = DoublyLinkedList_Pop(&queue->LinkedList, NULL);
+    }
   }
 
   return popped;
@@ -165,13 +184,17 @@ bool Queue_Peek(const Queue_t *const queue, void *const item)
 {
   bool peeked = false;
 
-  if (queue != NULL && item != NULL)
+  if (!Queue_IsEmpty(queue) && item != NULL)
   {
-    if (!Queue_IsEmpty(queue))
+    if (queue->Static)
     {
       memcpy(item, queue->Buffer + queue->Head, queue->ItemSize);
 
       peeked = true;
+    }
+    else
+    {
+      peeked = DoublyLinkedList_GetTail(&queue->LinkedList, item);
     }
   }
 
@@ -189,11 +212,18 @@ bool Queue_Reset(Queue_t *const queue)
 
   if (queue != NULL)
   {
-    queue->Items = 0UL;
-    queue->Head = 0UL;
-    queue->Tail = 0UL;
+    if (queue->Static)
+    {
+      queue->Items = 0UL;
+      queue->Head = 0UL;
+      queue->Tail = 0UL;
 
-    reset = true;
+      reset = true;
+    }
+    else
+    {
+      reset = DoublyLinkedList_Reset(&queue->LinkedList);
+    }
   }
 
   return reset;
@@ -215,14 +245,21 @@ bool Queue_IsEmpty(const Queue_t *const queue)
 
   if (queue != NULL)
   {
-    empty = (queue->Items == 0UL);
+    if (queue->Static)
+    {
+      empty = (queue->Items == 0UL);
+    }
+    else
+    {
+      empty = DoublyLinkedList_IsEmpty(&queue->LinkedList);
+    }
   }
 
   return empty;
 }
 
 /**
- * @brief Check if a queue is full.
+ * @brief Check if a statically allocated queue is full.
  *
  * @param[in] queue Pointer to the queue to check
  *
@@ -235,7 +272,7 @@ bool Queue_IsFull(const Queue_t *const queue)
 {
   bool full = false;
 
-  if (queue != NULL)
+  if (queue != NULL && queue->Static)
   {
     full = (queue->Items * queue->ItemSize == queue->BufferSize);
   }
@@ -253,7 +290,7 @@ bool Queue_IsFull(const Queue_t *const queue)
  ******************************************************************************/
 static inline void Queue_AdvanceItemOffset(const Queue_t *const queue, size_t *const itemOffset)
 {
-  if (queue != NULL && itemOffset != NULL)
+  if (queue != NULL && queue->Static && itemOffset != NULL)
   {
     *itemOffset = (*itemOffset + queue->ItemSize) % queue->BufferSize;
   }
