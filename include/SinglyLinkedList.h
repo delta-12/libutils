@@ -57,5 +57,8 @@ SinglyLinkedList_Index_t SinglyLinkedList_GetIndex(const SinglyLinkedList_t *con
 SinglyLinkedList_Length_t SinglyLinkedList_GetLength(const SinglyLinkedList_t *const list);
 bool SinglyLinkedList_Insert(SinglyLinkedList_t *const list, const SinglyLinkedList_Index_t index, const void *const item);
 bool SinglyLinkedList_Remove(SinglyLinkedList_t *const list, const SinglyLinkedList_Index_t index, void *const item);
+bool SinglyLinkedList_GetHead(const SinglyLinkedList_t *const list, void *const item);
+bool SinglyLinkedList_GetTail(const SinglyLinkedList_t *const list, void *const item);
+bool SinglyLinkedList_IsEmpty(const SinglyLinkedList_t *const list);
 
 #endif
