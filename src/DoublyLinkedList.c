@@ -492,7 +492,7 @@ bool DoublyLinkedList_GetTail(const DoublyLinkedList_t *const list, void *const 
 }
 
 /**
- * @brief Check if a list is empty.
+ * @brief Check if a doubly linked list is empty.
  *
  * @param[in] list Pointer to the list to check
  *
