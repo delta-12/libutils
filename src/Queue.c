@@ -22,7 +22,8 @@ static inline void Queue_AdvanceItemOffset(const Queue_t *const queue, size_t *c
 /**
  * @brief Initialize a dynamically allocated queue.
  *
- * @param[in] itemSize Size in bytes of the items held in the queue
+ * @param[in,out] queue    Pointer to the queue to initialize
+ * @param[in]     itemSize Size in bytes of the items held in the queue
  *
  * @return Whether the queue was successfully initialized or not
  *
@@ -183,7 +184,7 @@ bool Queue_Peek(const Queue_t *const queue, void *const item)
 {
   bool peeked = false;
 
-  if (queue != NULL && item != NULL && !Queue_IsEmpty(queue))
+  if (!Queue_IsEmpty(queue) && item != NULL)
   {
     if (queue->Static)
     {
