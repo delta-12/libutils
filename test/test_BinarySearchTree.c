@@ -1,5 +1,6 @@
 #include "unity.h"
 #include "BinarySearchTree.h"
+#include "time.h"
 
 #define TEST_BINARYSEARCHTREE_ITEM      uint64_t
 #define TEST_BINARYSEARCHTREE_ITEM_SIZE sizeof(TEST_BINARYSEARCHTREE_ITEM)
@@ -13,6 +14,8 @@ void setUp(void)
 {
   BinarySearchTree_Init(&test_BinarySearchTree_Tree, TEST_BINARYSEARCHTREE_ITEM_SIZE);
   test_BinarySearchTree_Item = 0UL;
+
+  srand(time(NULL));
 }
 
 void tearDown(void)
@@ -343,7 +346,15 @@ void test_BinarySearchTree_ResetFree(void)
 
 void test_BinarySearchTree_LargeReset(void)
 {
-  /* TODO add large amount of random numbers to BST after new Stack implementation and reset without memory leaks */
+  BinarySearchTree_Reset(&test_BinarySearchTree_Tree);
+
+  for (uint64_t i = 0UL; i < (1 << 20); i++)
+  {
+    test_BinarySearchTree_Item = (test_BinarySearchTree_Item_t)rand();
+    BinarySearchTree_Insert(&test_BinarySearchTree_Tree, test_BinarySearchTree_Item, &test_BinarySearchTree_Item);
+  }
+
+  TEST_ASSERT_TRUE(BinarySearchTree_Reset(&test_BinarySearchTree_Tree));
 }
 
 int main(void)

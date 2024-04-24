@@ -175,27 +175,27 @@ bool BinarySearchTree_Reset(BinarySearchTree_t *const tree)
 
   if (tree != NULL)
   {
-    Stack_t *stack = Stack_Init(20UL, sizeof(BinarySearchTree_Node_t *)); /* TODO 20 items should be enough for balanced BST with ~1 million nodes,
-                                                                             will not perform well with unbalanced trees.  MUST be updated to new Stack API. */
+    Stack_t stack;
     BinarySearchTree_Node_t *node;
 
-    Stack_Push(stack, &tree->Root);
+    Stack_Init(&stack, sizeof(BinarySearchTree_Node_t *));
+    Stack_Push(&stack, &tree->Root);
     tree->Root = NULL;
 
-    while (!Stack_IsEmpty(stack))
+    while (!Stack_IsEmpty(&stack))
     {
-      Stack_Pop(stack, &node);
+      Stack_Pop(&stack, &node);
 
       if (node != NULL)
       {
-        Stack_Push(stack, &node->Left);
-        Stack_Push(stack, &node->Right);
+        Stack_Push(&stack, &node->Left);
+        Stack_Push(&stack, &node->Right);
 
         free(node);
       }
     }
 
-    Stack_Free(stack);
+    Stack_Free(&stack);
 
     reset = true;
   }

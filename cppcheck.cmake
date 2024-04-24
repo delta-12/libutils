@@ -21,6 +21,7 @@ add_custom_target(
         cppcheck
         ${${CPPCHECK_NAME}_BIN}
         --enable=all
+        --check-level=exhaustive
         --suppress-xml=${CMAKE_SOURCE_DIR}/suppressions.xml
         --error-exitcode=2
         --xml
