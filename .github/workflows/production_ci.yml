@@ -1,0 +1,30 @@
+on: [pull_request]
+branches: "main"
+jobs:
+  release-unit-tests:
+    runs-on: ubuntu-latest
+    container:
+      image: d3lta12/c-utils-tools:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+      - name: Generate CMake cache
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+      - name: Build tests
+        run: cmake --build build -j$(nproc)
+      - name: Execute tests
+        run: ctest --test-dir build --verbose
+      - name: Upload unit tests log
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-tests-log
+          path: build/Testing/Temporary/LastTest.log
+      - name: Upload Valgrind reports
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: valgrind-reports
+          path: build/Testing/Temporary/test_*-valgrind-report.xml

@@ -1,0 +1,20 @@
+on: [release]
+types: [published]
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    container:
+      image: node:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Doxygen
+        run: apt update && apt install -y doxygen
+      - name: Install Surge
+        run: npm install --global surge
+      - name: Make build directory
+        run: mkdir build
+      - name: Run Doxygen
+        run: doxygen Doxyfile
+      - name: Publish docs
+        run: surge --project $(pwd)/build/docs/html --domain ${{ vars.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
