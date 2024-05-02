@@ -1,2 +1,11 @@
 # CMake
-build
+**/build/
+
+# Docker
+docker-build/
+
+# Doxygen
+**/docs/
+
+# VS Code
+.vscode/

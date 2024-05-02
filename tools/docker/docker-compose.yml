@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  build-and-test:
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ../../:/libutils
+    working_dir: /libutils/docker-build
+    command: cmake .. -G Ninja
