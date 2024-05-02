@@ -34,6 +34,7 @@ set_target_properties(utils PROPERTIES
   OUTPUT_NAME utils-${CMAKE_PROJECT_VERSION}
 )
 target_sources(utils PUBLIC
+  src/BinarySearchTree.c
   src/DoublyLinkedList.c
   src/Queue.c
   src/SinglyLinkedList.c
@@ -62,6 +63,7 @@ function(add_test_with_valgrind name source)
 )
 endfunction()
 
+add_test_with_valgrind(test_BinarySearchTree test/test_BinarySearchTree.c)
 add_test_with_valgrind(test_DoublyLinkedList test/test_DoublyLinkedList.c)
 add_test_with_valgrind(test_SinglyLinkedList test/test_SinglyLinkedList.c)
 add_test_with_valgrind(test_Queue test/test_Queue.c)
