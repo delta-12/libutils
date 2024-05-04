@@ -26,20 +26,14 @@ endforeach()
 include(cppcheck.cmake)
 include(doxygen.cmake)
 include(uncrustify.cmake)
+include(libutils.cmake)
 
-add_library(utils)
 set_target_properties(utils PROPERTIES
   VERSION ${CMAKE_PROJECT_VERSION}
   SOVERSION ${CMAKE_PROJECT_VERSION_MAJOR}
-  OUTPUT_NAME utils-${CMAKE_PROJECT_VERSION}
+  OUTPUT_NAME utils-v${CMAKE_PROJECT_VERSION}
 )
-target_sources(utils PUBLIC
-  src/BinarySearchTree.c
-  src/DoublyLinkedList.c
-  src/Queue.c
-  src/SinglyLinkedList.c
-  src/Stack.c
-)
+
 add_dependencies(utils uncrustify)
 
 include(CTest)
