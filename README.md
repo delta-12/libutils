@@ -10,6 +10,26 @@ Collection of C utils.
 
 ## Getting Started
 
+### Include in another CMake project
+
+To include this library in another project that uses CMake, simply include the `libutils.cmake` file in your `CMakeLists.txt`.
+
+`include(<path to libutils.cmake>)`, e.g. `include(libutils/libutils.cmake)`
+
+Then, add `utils` to your target as a dependecy.
+
+`add_dependencies(<your target> utils)`
+
+### Build and Link Externally
+
+The static library can be built by running the following commands:
+
+`cmake -B build -G Ninja`
+
+`cmake --build build -j$(nproc)`
+
+Then, you can link against the static library `libutils-v<version>.a`. For example, `gcc -o <target> <target>.c -I <path to libutils>/include -L <path to libutils>/build -lutils-v<version>`
+
 ## Documentation
 
 Documentation for the latest release can be found here: [https://libutils-docs.surge.sh](https://libutils-docs.surge.sh)
