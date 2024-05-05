@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(libutils LANGUAGES C VERSION 0.0.0)
+project(libutils LANGUAGES C VERSION 1.0.0)
 
 set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -fdiagnostics-color=always")
@@ -26,20 +26,14 @@ endforeach()
 include(cppcheck.cmake)
 include(doxygen.cmake)
 include(uncrustify.cmake)
+include(libutils.cmake)
 
-add_library(utils)
 set_target_properties(utils PROPERTIES
   VERSION ${CMAKE_PROJECT_VERSION}
   SOVERSION ${CMAKE_PROJECT_VERSION_MAJOR}
-  OUTPUT_NAME utils-${CMAKE_PROJECT_VERSION}
+  OUTPUT_NAME utils-v${CMAKE_PROJECT_VERSION}
 )
-target_sources(utils PUBLIC
-  src/BinarySearchTree.c
-  src/DoublyLinkedList.c
-  src/Queue.c
-  src/SinglyLinkedList.c
-  src/Stack.c
-)
+
 add_dependencies(utils uncrustify)
 
 include(CTest)
