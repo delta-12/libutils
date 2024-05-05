@@ -2,6 +2,10 @@
 
 Collection of C utils.
 
+Current version: v1.0.0
+
+Implementations for Binary Search Tree, Doubly and Singly Linked List, and statically and dynamically allocated Queue and Stack.
+
 ## Table of Contents
 
 - [Getting Started](#getting-started)
